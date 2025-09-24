@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    image: conneccity-api
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CONNECCITY_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Serviço para desenvolvimento local (opcional)
+  api-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    image: conneccity-api-dev
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CONNECCITY_PORT=8080
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./api:/app/api
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    command: ["uvicorn", "api.app.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+    profiles:
+      - dev
+    restart: unless-stopped
+
+volumes:
+  logs:

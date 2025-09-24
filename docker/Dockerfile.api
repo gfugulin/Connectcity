@@ -1,0 +1,29 @@
+FROM python:3.11-slim
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copiar e instalar dependências Python
+COPY api/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copiar código da aplicação
+COPY api /app/api
+COPY data /app/data
+
+# Copiar biblioteca C compilada
+COPY core-c/build/libconneccity.so /app/core-c/build/libconneccity.so
+
+# Configurar variáveis de ambiente
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Expor porta
+EXPOSE 8080
+
+# Comando para iniciar a aplicação
+CMD ["uvicorn", "api.app.main:app", "--host", "0.0.0.0", "--port", "8080"]
