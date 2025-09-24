@@ -13,6 +13,9 @@ from .validators import validate_route_request, validate_edge_to_fix_request
 from .cache import route_cache, alternatives_cache, edge_analysis_cache, cached_route, get_cache_stats, clear_all_caches
 from .performance import metrics, measure_performance, get_performance_recommendations
 from .real_data_api import real_data_router
+from .sp_data_api import sp_data_router
+from .pipeline_api import pipeline_router
+from .validation_api import validation_router
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 NODES = os.path.join(DATA_DIR, "nodes.csv")
@@ -25,8 +28,11 @@ DEFAULT_WEIGHTS = {
 
 app = FastAPI(title="Conneccity API", version="v1", description="API para rotas acessíveis e resilientes")
 
-# Incluir router de dados reais
+# Incluir routers
 app.include_router(real_data_router)
+app.include_router(sp_data_router)
+app.include_router(pipeline_router)
+app.include_router(validation_router)
 
 # Configurar logging estruturado
 logging.basicConfig(level=logging.INFO, format='%(message)s')

@@ -1,0 +1,27 @@
+{
+  "total_nodes": 0,
+  "total_edges": 0,
+  "gtfs_stops": 0,
+  "osm_nodes": 0,
+  "osm_ways": 0,
+  "accessibility_analysis": {
+    "total_ways": 0,
+    "accessible_ways": 0,
+    "inaccessible_ways": 0,
+    "unknown_accessibility": 0,
+    "barriers_found": [],
+    "accessibility_features": []
+  },
+  "surface_quality_analysis": {
+    "total_ways": 0,
+    "surface_types": {},
+    "poor_surfaces": [],
+    "good_surfaces": []
+  },
+  "flood_risk_analysis": {
+    "total_ways": 0,
+    "flood_prone_areas": [],
+    "water_features": [],
+    "elevation_data": []
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "suite_name": "Full Integration Test",
+  "start_time": "2025-09-24T18:01:12.489134",
+  "end_time": "2025-09-24T18:03:36.811711",
+  "total_score": 0.42857142857142855,
+  "tests": [
+    {
+      "name": "Data Collection",
+      "status": "failed",
+      "duration": 142.42330288887024,
+      "score": 0.0,
+      "errors": [
+        "Falha na coleta de dados"
+      ],
+      "warnings": [],
+      "info": []
+    },
+    {
+      "name": "Data Validation",
+      "status": "passed",
+      "duration": 0.0,
+      "score": 0.9038461538461539,
+      "errors": [],
+      "warnings": [
+        "GTFS: Arquivo GTFS obrigatório ausente: trips",
+        "GTFS: Arquivo GTFS obrigatório ausente: stop_times"
+      ],
+      "info": [
+        "Validação GTFS - Score: 0.81",
+        "Validação OSM - Score: 1.00",
+        "Validação de dados bem-sucedida"
+      ]
+    },
+    {
+      "name": "Data Integration",
+      "status": "failed",
+      "duration": 0.020910024642944336,
+      "score": 0.0,
+      "errors": [
+        "Erro na integração: object dict can't be used in 'await' expression"
+      ],
+      "warnings": [],
+      "info": []
+    },
+    {
+      "name": "Route Calculation",
+      "status": "failed",
+      "duration": 0.5284981727600098,
+      "score": 0.0,
+      "errors": [
+        "Taxa de sucesso das rotas insuficiente: 0.00"
+      ],
+      "warnings": [
+        "Rota Estação Sé -> Estação Paulista: ❌",
+        "Rota Terminal Bandeira -> Shopping Iguatemi: ❌",
+        "Rota Estação Trianon-MASP -> Parque Ibirapuera: ❌",
+        "Rota Vila Madalena -> Pinheiros: ❌",
+        "Rota Centro -> Vila Olímpia: ❌"
+      ],
+      "info": []
+    },
+    {
+      "name": "Accessibility Analysis",
+      "status": "failed",
+      "duration": 0.11210918426513672,
+      "score": 0.6333333333333333,
+      "errors": [
+        "Score de acessibilidade insuficiente: 0.63"
+      ],
+      "warnings": [],
+      "info": []
+    },
+    {
+      "name": "Flood Risk Analysis",
+      "status": "passed",
+      "duration": 0.11612629890441895,
+      "score": 0.7380952380952381,
+      "errors": [],
+      "warnings": [],
+      "info": [
+        "Score de análise de alagamento: 0.74",
+        "Áreas de alto risco: 5",
+        "Rotas propensas a alagamento: 8"
+      ]
+    },
+    {
+      "name": "Performance Test",
+      "status": "passed",
+      "duration": 1.1170642375946045,
+      "score": 0.9441467881202698,
+      "errors": [],
+      "warnings": [],
+      "info": [
+        "Data Collection: 0.50s",
+        "Data Validation: 0.20s",
+        "Route Calculation: 0.30s",
+        "Accessibility Analysis: 0.11s",
+        "Performance média: 0.28s"
+      ]
+    }
+  ],
+  "statistics": {
+    "total_suites": 1,
+    "total_tests": 7,
+    "passed_tests": 3,
+    "failed_tests": 4,
+    "success_rate": 0.42857142857142855,
+    "avg_score": 0.42857142857142855
+  }
+}

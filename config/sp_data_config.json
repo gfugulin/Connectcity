@@ -1,0 +1,24 @@
+{
+  "gtfs_sources": {
+    "sample": "https://github.com/google/transit/raw/master/gtfs/spec/en/examples/sample-feed.zip"
+  },
+  "osm_areas": {
+    "centro": [
+      -46.65,
+      -23.55,
+      -46.6,
+      -23.5
+    ]
+  },
+  "update_intervals": {
+    "gtfs": 1800,
+    "osm": 43200,
+    "integration": 900
+  },
+  "cache_ttl": {
+    "gtfs_data": 3600,
+    "osm_data": 86400,
+    "route_cache": 1800,
+    "accessibility_data": 7200
+  }
+}
