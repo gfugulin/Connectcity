@@ -7,9 +7,9 @@ import logging
 import asyncio
 from pathlib import Path
 
-from ..integration.data_integrator import DataIntegrator, CITY_BOUNDS, GTFS_SOURCES
-from ..integration.gtfs_processor import GTFSProcessor
-from ..integration.osm_processor import OSMProcessor
+from integration.data_integrator import DataIntegrator, CITY_BOUNDS, GTFS_SOURCES
+from integration.gtfs_processor import GTFSProcessor
+from integration.osm_processor import OSMProcessor
 from .exceptions import ConneccityException, CoreLibraryException
 
 logger = logging.getLogger(__name__)

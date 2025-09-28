@@ -503,3 +503,5 @@ class DataStreamer:
             
         except Exception as e:
             logger.error(f"❌ Erro ao importar mensagens: {e}")
+
+

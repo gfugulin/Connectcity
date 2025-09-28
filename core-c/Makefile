@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-O3 -march=native -flto -DNDEBUG -fPIC -Wall -Wextra
 LDFLAGS=-shared
-SRC=src/graph.c src/dijkstra.c src/yen.c
+SRC=src/graph.c src/dijkstra.c src/yen.c src/edge_analysis.c
 HDR=src/graph.h src/cost.h
 BUILD=build
 

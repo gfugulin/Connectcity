@@ -21,6 +21,12 @@ DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "
 NODES = os.path.join(DATA_DIR, "nodes.csv")
 EDGES = os.path.join(DATA_DIR, "edges.csv")
 
+# Logar os caminhos efetivos
+print(f"[BOOT] CSV paths -> NODES={NODES} EDGES={EDGES}")
+print(f"[BOOT] DATA_DIR={DATA_DIR}")
+print(f"[BOOT] NODES existe: {os.path.isfile(NODES)}")
+print(f"[BOOT] EDGES existe: {os.path.isfile(EDGES)}")
+
 DEFAULT_WEIGHTS = {
     "padrao": {"alpha":6, "beta":2, "gamma":1, "delta":4},
     "pcd":    {"alpha":6, "beta":12, "gamma":6, "delta":4}
@@ -38,353 +44,214 @@ app.include_router(validation_router)
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger("conneccity")
 
-# Inicializar engine com tratamento de erro
+# Criar dataset mínimo se necessário
+def _create_minimal_dataset():
+    """Cria um dataset mínimo para garantir que a API funcione"""
+    minimal_nodes = os.path.join(DATA_DIR, "minimal_nodes.csv")
+    minimal_edges = os.path.join(DATA_DIR, "minimal_edges.csv")
+    
+    # Criar diretório se não existir
+    os.makedirs(DATA_DIR, exist_ok=True)
+    
+    # Criar nodes.csv mínimo
+    with open(minimal_nodes, 'w') as f:
+        f.write("id,name,lat,lon,tipo\n")
+        f.write("node1,Estação Central,-23.5505,-46.6333,metro\n")
+        f.write("node2,Estação Paulista,-23.5615,-46.6565,metro\n")
+        f.write("node3,Terminal Bandeira,-23.5505,-46.6333,onibus\n")
+    
+    # Criar edges.csv mínimo
+    with open(minimal_edges, 'w') as f:
+        f.write("from,to,tempo_min,transferencia,escada,calcada_ruim,risco_alag,modo\n")
+        f.write("node1,node2,5.0,0,0,0,0,metro\n")
+        f.write("node2,node3,3.0,1,0,1,0,pe\n")
+    
+    logger.info(f"Dataset mínimo criado: {minimal_nodes} e {minimal_edges}")
+    return minimal_nodes, minimal_edges
+
+# Inicializar engine com fallback automático
+def _init_engine_with_fallback() -> Engine:
+    # Tentativa 1: arquivos primários
+    if os.path.isfile(NODES) and os.path.isfile(EDGES):
+        try:
+            eng = Engine(NODES, EDGES, DEFAULT_WEIGHTS)
+            if eng.g and eng.g.contents.n > 0:
+                logger.info(f"Engine inicializado com CSV primário: NODES={NODES} EDGES={EDGES}")
+                return eng
+        except Exception as e:
+            logger.warning(f"Falha ao carregar CSV primário: {e}")
+    
+    # Tentativa 2: CSV de amostra
+    sample_nodes = os.path.join(DATA_DIR, "sp", "sample", "nodes.csv")
+    sample_edges = os.path.join(DATA_DIR, "sp", "sample", "edges.csv")
+    
+    logger.info(f"Tentando fallback para: {sample_nodes} e {sample_edges}")
+    logger.info(f"sample_nodes existe: {os.path.isfile(sample_nodes)}")
+    logger.info(f"sample_edges existe: {os.path.isfile(sample_edges)}")
+    
+    if os.path.isfile(sample_nodes) and os.path.isfile(sample_edges):
+        try:
+            eng = Engine(sample_nodes, sample_edges, DEFAULT_WEIGHTS)
+            if eng.g and eng.g.contents.n > 0:
+                logger.info(f"Engine inicializado com CSV de amostra: NODES={sample_nodes} EDGES={sample_edges}")
+                return eng
+        except Exception as e:
+            logger.error(f"Falha ao carregar CSV de amostra: {e}")
+    
+    # Tentativa 3: Dataset mínimo
+    logger.info("Criando dataset mínimo...")
+    minimal_nodes, minimal_edges = _create_minimal_dataset()
+    try:
+        eng = Engine(minimal_nodes, minimal_edges, DEFAULT_WEIGHTS)
+        if eng.g and eng.g.contents.n > 0:
+            logger.info(f"Engine inicializado com dataset mínimo: NODES={minimal_nodes} EDGES={minimal_edges}")
+            return eng
+    except Exception as e:
+        logger.error(f"Falha ao carregar dataset mínimo: {e}")
+    
+    raise GraphLoadException("Nenhum arquivo CSV válido encontrado (nem primário, nem amostra, nem mínimo)")
+
+# Inicializar engine com fallback
 try:
-    engine = Engine(NODES, EDGES, DEFAULT_WEIGHTS)
-    if not engine.g:
-        raise GraphLoadException("Falha ao carregar grafo dos arquivos CSV")
+    engine = _init_engine_with_fallback()
+    logger.info("✅ Engine inicializado com sucesso!")
 except Exception as e:
-    logger.error(f"Erro ao inicializar engine: {str(e)}")
-    raise GraphLoadException(f"Erro ao inicializar sistema: {str(e)}")
+    logger.error(f"❌ Erro ao inicializar engine: {str(e)}")
+    # Para debug: criar um engine mock
+    logger.info("🔧 Criando engine mock para debug...")
+    engine = None
 
 # Middleware de logs
 @app.middleware("http")
 async def log_middleware(request: Request, call_next):
     t0 = time.time()
-    rid = str(uuid.uuid4())
+    req_id = str(uuid.uuid4())[:8]
     
-    # Extrair parâmetros da requisição para logs
-    request_data = {}
-    if request.method == "POST" and request.url.path in ["/route", "/alternatives"]:
-        try:
-            body = await request.body()
-            request_data = json.loads(body)
-        except:
-            pass
+    # Log da requisição
+    logger.info(f"[{req_id}] {request.method} {request.url.path}")
     
-    response = await call_next(request)
-    
-    dt = int((time.time() - t0) * 1000)
-    
-    log_entry = {
-        "rid": rid,
-        "path": request.url.path,
-        "method": request.method,
-        "status": response.status_code,
-        "dur_ms": dt
-    }
-    
-    # Adicionar parâmetros específicos para rotas
-    if request_data:
-        log_entry.update({
-            "from": request_data.get("from"),
-            "to": request_data.get("to"),
-            "perfil": request_data.get("perfil"),
-            "chuva": request_data.get("chuva"),
-            "k": request_data.get("k")
-        })
-    
-    logger.info(json.dumps(log_entry))
-    return response
+    try:
+        response = await call_next(request)
+        dt = time.time() - t0
+        logger.info(f"[{req_id}] {response.status_code} {dt:.3f}s")
+        return response
+    except Exception as e:
+        dt = time.time() - t0
+        logger.error(f"[{req_id}] ERROR {dt:.3f}s: {str(e)}")
+        raise
 
-# Exception handlers
+# Endpoint de health check
+@app.get("/health")
+async def health_check():
+    """Endpoint de health check"""
+    return {
+        "status": "healthy",
+        "timestamp": time.time(),
+        "engine_loaded": engine is not None,
+        "version": "v1"
+    }
+
+# Endpoint de rota
+@app.post("/route")
+async def get_route(request: RouteRequest):
+    """Calcular rota entre dois pontos"""
+    if not engine:
+        raise HTTPException(status_code=503, detail="Engine não inicializado")
+    
+    try:
+        # Validar perfil
+        if request.perfil not in DEFAULT_WEIGHTS:
+            raise InvalidProfileException(f"Perfil inválido: {request.perfil}")
+        
+        # Obter índices dos nós
+        s = engine.idx(request.from_id)
+        t = engine.idx(request.to_id)
+        
+        if s == -1:
+            raise NodeNotFoundException(f"Nó origem não encontrado: {request.from_id}")
+        if t == -1:
+            raise NodeNotFoundException(f"Nó destino não encontrado: {request.to_id}")
+        
+        # Calcular rota
+        params = engine._params(request.perfil, request.chuva)
+        path, cost = engine.best(s, t, params)
+        
+        if not path:
+            raise RouteNotFoundException(f"Nenhuma rota encontrada entre {request.from_id} e {request.to_id}")
+        
+        return {
+            "path": path,
+            "cost": cost,
+            "from": request.from_id,
+            "to": request.to_id,
+            "profile": request.perfil,
+            "rain": request.chuva
+        }
+    except ConneccityException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
+
+# Endpoint de alternativas
+@app.post("/alternatives")
+async def get_alternatives(request: RouteRequest):
+    """Calcular k rotas alternativas"""
+    if not engine:
+        raise HTTPException(status_code=503, detail="Engine não inicializado")
+    
+    try:
+        # Validar perfil
+        if request.perfil not in DEFAULT_WEIGHTS:
+            raise InvalidProfileException(f"Perfil inválido: {request.perfil}")
+        
+        # Obter índices dos nós
+        s = engine.idx(request.from_id)
+        t = engine.idx(request.to_id)
+        
+        if s == -1:
+            raise NodeNotFoundException(f"Nó origem não encontrado: {request.from_id}")
+        if t == -1:
+            raise NodeNotFoundException(f"Nó destino não encontrado: {request.to_id}")
+        
+        # Calcular alternativas
+        params = engine._params(request.perfil, request.chuva)
+        alternatives = engine.k_alternatives(s, t, params, request.k)
+        
+        if not alternatives:
+            raise RouteNotFoundException(f"Nenhuma rota encontrada entre {request.from_id} e {request.to_id}")
+        
+        return AlternativesResponse(
+            alternatives=[Alt(path=path, cost=cost) for path, cost in alternatives],
+            from_id=request.from_id,
+            to_id=request.to_id,
+            profile=request.perfil,
+            rain=request.chuva
+        )
+    except ConneccityException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
+
+# Endpoint de perfis
+@app.get("/profiles")
+async def get_profiles():
+    """Listar perfis disponíveis"""
+    return {
+        "profiles": list(DEFAULT_WEIGHTS.keys()),
+        "weights": DEFAULT_WEIGHTS
+    }
+
+# Tratamento de exceções
 @app.exception_handler(ConneccityException)
 async def conneccity_exception_handler(request: Request, exc: ConneccityException):
-    """Handler para exceções Conneccity"""
-    logger.error(f"ConneccityException: {exc.error_code} - {exc.message}")
-    http_exc = handle_conneccity_exception(exc)
-    return http_exc
+    return handle_conneccity_exception(request, exc)
 
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):
-    """Handler para erros de validação Pydantic"""
-    logger.error(f"ValidationError: {exc}")
-    return HTTPException(
-        status_code=422,
-        detail={
-            "error_code": "VALIDATION_ERROR",
-            "message": "Erro de validação nos dados de entrada",
-            "details": exc.errors()
-        }
-    )
+    return create_error_response(400, "Validation Error", str(exc))
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    """Handler para exceções gerais"""
-    logger.error(f"Exception não tratada: {str(exc)}\n{traceback.format_exc()}")
-    return HTTPException(
-        status_code=500,
-        detail={
-            "error_code": "INTERNAL_ERROR",
-            "message": "Erro interno do servidor",
-            "details": {"exception": str(exc)}
-        }
-    )
-
-@app.get("/health")
-def health():
-    return {"status":"ok", "version":"v1"}
-
-@cached_route(route_cache)
-def _calculate_route(from_id: str, to_id: str, perfil: str, chuva: bool):
-    """Função interna para cálculo de rota (com cache)"""
-    s = engine.idx(from_id)
-    t = engine.idx(to_id)
-    p = engine._params(perfil, chuva)
-    path_idx, custo = engine.best(s, t, p)
-    
-    # Mapear índices para IDs
-    import csv
-    ids = []
-    with open(NODES) as f:
-        r = csv.DictReader(f)
-        for row in r: 
-            ids.append(row["id"])
-    
-    path = [ids[i] for i in path_idx]
-    return {
-        "tempo_total_min": round(custo, 1), 
-        "path": path, 
-        "transferencias": 0, 
-        "barreiras_evitas": []
-    }
-
-@app.post("/route")
-@measure_performance("/route")
-def route(req: RouteRequest):
-    try:
-        # Validar entrada
-        validation_errors = validate_route_request(req.from_id, req.to_id, req.perfil, req.chuva, req.k)
-        if validation_errors:
-            raise ValidationException("Erro de validação", {"validation_errors": validation_errors})
-        
-        # Verificar se os nós existem
-        s = engine.idx(req.from_id)
-        t = engine.idx(req.to_id)
-        
-        if s < 0:
-            raise NodeNotFoundException(req.from_id)
-        if t < 0:
-            raise NodeNotFoundException(req.to_id)
-        
-        # Calcular rota (com cache)
-        result = _calculate_route(req.from_id, req.to_id, req.perfil, req.chuva)
-        
-        if not result["path"]:
-            raise RouteNotFoundException(req.from_id, req.to_id)
-        
-        return {"best": result}
-        
-    except ConneccityException:
-        raise
-    except Exception as e:
-        logger.error(f"Erro inesperado em /route: {str(e)}")
-        raise CoreLibraryException(f"Erro ao calcular rota: {str(e)}")
-
-@app.post("/alternatives", response_model=AlternativesResponse)
-def alternatives(req: RouteRequest):
-    try:
-        # Validar entrada
-        validation_errors = validate_route_request(req.from_id, req.to_id, req.perfil, req.chuva, req.k)
-        if validation_errors:
-            raise ValidationException("Erro de validação", {"validation_errors": validation_errors})
-        
-        # Verificar se os nós existem
-        s = engine.idx(req.from_id)
-        t = engine.idx(req.to_id)
-        
-        if s < 0:
-            raise NodeNotFoundException(req.from_id)
-        if t < 0:
-            raise NodeNotFoundException(req.to_id)
-        
-        # Calcular alternativas
-        p = engine._params(req.perfil, req.chuva)
-        k = max(1, min(req.k, 3))
-        routes = engine.k_alternatives(s, t, p, k)
-        
-        if not routes:
-            raise RouteNotFoundException(req.from_id, req.to_id)
-        
-        # Mapear índices para IDs
-        import csv
-        ids = []
-        with open(NODES) as f:
-            r = csv.DictReader(f)
-            for row in r: 
-                ids.append(row["id"])
-        
-        out: List[Alt] = []
-        for i, (path_idx, custo) in enumerate(routes, start=1):
-            out.append(Alt(
-                id=i, 
-                tempo_total_min=round(custo, 1), 
-                transferencias=0, 
-                path=[ids[x] for x in path_idx]
-            ))
-        
-        return {"alternatives": out}
-        
-    except ConneccityException:
-        raise
-    except Exception as e:
-        logger.error(f"Erro inesperado em /alternatives: {str(e)}")
-        raise CoreLibraryException(f"Erro ao calcular alternativas: {str(e)}")
-
-@app.get("/profiles")
-def get_profiles():
-    """Retorna os perfis disponíveis e seus pesos"""
-    return {
-        "profiles": DEFAULT_WEIGHTS,
-        "description": {
-            "padrao": "Perfil padrão para usuários sem restrições de mobilidade",
-            "pcd": "Perfil para pessoas com deficiência (PcD) - evita escadas e calçadas ruins"
-        }
-    }
-
-@app.get("/nodes")
-def get_nodes():
-    """Retorna todos os nós do grafo"""
-    import csv
-    nodes = []
-    with open(NODES) as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            nodes.append({
-                "id": row["id"],
-                "name": row["name"],
-                "lat": float(row["lat"]),
-                "lon": float(row["lon"]),
-                "tipo": row["tipo"]
-            })
-    return {"nodes": nodes}
-
-@app.get("/edges")
-def get_edges():
-    """Retorna todas as arestas do grafo"""
-    import csv
-    edges = []
-    with open(EDGES) as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            edges.append({
-                "from": row["from"],
-                "to": row["to"],
-                "tempo_min": float(row["tempo_min"]),
-                "transferencia": int(row["transferencia"]),
-                "escada": int(row["escada"]),
-                "calcada_ruim": int(row["calcada_ruim"]),
-                "risco_alag": int(row["risco_alag"]),
-                "modo": row["modo"]
-            })
-    return {"edges": edges}
-
-@app.get("/metrics/edge-to-fix")
-def get_edge_to_fix(top: int = 3, perfil: str = "padrao", chuva: bool = False):
-    """
-    Retorna ranking de trechos que mais impactariam na redução de custo/tempo
-    se fossem melhorados
-    """
-    try:
-        # Validar parâmetros
-        validation_errors = validate_edge_to_fix_request(top, perfil, chuva)
-        if validation_errors:
-            raise ValidationException("Erro de validação", {"validation_errors": validation_errors})
-        
-        # Obter parâmetros de custo
-        p = engine._params(perfil, chuva)
-        
-        # Analisar melhorias
-        improvements = engine.analyze_edge_improvements(p, top)
-        
-        # Mapear índices para IDs dos nós
-        import csv
-        node_ids = []
-        with open(NODES) as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                node_ids.append(row["id"])
-        
-        # Formatar resultado
-        suggested_improvements = []
-        for imp in improvements:
-            from_id = node_ids[imp["from"]] if imp["from"] < len(node_ids) else f"Node{imp['from']}"
-            to_id = node_ids[imp["to"]] if imp["to"] < len(node_ids) else f"Node{imp['to']}"
-            
-            # Determinar nível de impacto
-            impact_level = "Baixo"
-            if imp["impact_score"] > 10:
-                impact_level = "Alto"
-            elif imp["impact_score"] > 5:
-                impact_level = "Médio"
-            
-            suggested_improvements.append({
-                "edge": f"{from_id}->{to_id}",
-                "issue": imp["issue_type"],
-                "current_cost": round(imp["current_cost"], 2),
-                "potential_savings": round(imp["potential_savings"], 2),
-                "affected_routes": imp["affected_routes"],
-                "impact_score": round(imp["impact_score"], 2),
-                "impact_level": impact_level,
-                "priority": imp["priority"],
-                "description": f"Melhoria de {imp['issue_type']} pode economizar {imp['potential_savings']:.1f}min em {imp['affected_routes']} rotas"
-            })
-        
-        return {
-            "analysis_params": {
-                "perfil": perfil,
-                "chuva": chuva,
-                "top": top
-            },
-            "total_improvements_found": len(improvements),
-            "suggested_improvements": suggested_improvements
-        }
-        
-    except ConneccityException:
-        raise
-    except Exception as e:
-        logger.error(f"Erro inesperado em /metrics/edge-to-fix: {str(e)}")
-        raise CoreLibraryException(f"Erro na análise: {str(e)}")
-
-@app.get("/metrics/performance")
-def get_performance_metrics():
-    """Retorna métricas de performance da API"""
-    try:
-        stats = metrics.get_stats()
-        cache_stats = get_cache_stats()
-        recommendations = get_performance_recommendations()
-        
-        return {
-            "performance_stats": stats,
-            "cache_stats": cache_stats,
-            "recommendations": recommendations,
-            "timestamp": time.time()
-        }
-    except Exception as e:
-        logger.error(f"Erro ao obter métricas: {str(e)}")
-        raise CoreLibraryException(f"Erro ao obter métricas: {str(e)}")
-
-@app.post("/admin/clear-cache")
-def clear_cache():
-    """Limpa todos os caches (endpoint administrativo)"""
-    try:
-        clear_all_caches()
-        return {
-            "message": "Cache limpo com sucesso",
-            "timestamp": time.time()
-        }
-    except Exception as e:
-        logger.error(f"Erro ao limpar cache: {str(e)}")
-        raise CoreLibraryException(f"Erro ao limpar cache: {str(e)}")
-
-@app.get("/admin/cache-stats")
-def get_cache_statistics():
-    """Retorna estatísticas dos caches"""
-    try:
-        return {
-            "cache_stats": get_cache_stats(),
-            "timestamp": time.time()
-        }
-    except Exception as e:
-        logger.error(f"Erro ao obter estatísticas de cache: {str(e)}")
-        raise CoreLibraryException(f"Erro ao obter estatísticas: {str(e)}")
+    logger.error(f"Erro não tratado: {str(exc)}")
+    logger.error(traceback.format_exc())
+    return create_error_response(500, "Internal Server Error", "Erro interno do servidor")

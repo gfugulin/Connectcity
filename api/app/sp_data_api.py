@@ -7,7 +7,7 @@ import logging
 import asyncio
 from pathlib import Path
 
-from ..integration.sp_data_collector import SPDataCollector
+from integration.sp_data_collector import SPDataCollector
 from .exceptions import ConneccityException, CoreLibraryException
 
 logger = logging.getLogger(__name__)
@@ -236,3 +236,4 @@ async def _collect_data_background():
         logger.info(f"Coleta em background concluída: {results.get('statistics', {})}")
     except Exception as e:
         logger.error(f"Erro na coleta em background: {str(e)}")
+

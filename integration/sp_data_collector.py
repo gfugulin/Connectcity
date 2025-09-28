@@ -442,3 +442,4 @@ class SPDataCollector:
         except Exception as e:
             logger.error(f"Erro ao atualizar configuração: {str(e)}")
             raise
+

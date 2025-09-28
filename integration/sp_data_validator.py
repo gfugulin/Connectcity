@@ -720,3 +720,5 @@ class SPDataValidator:
                 return
         
         logger.warning(f"⚠️ Regra de validação não encontrada: {rule_name}")
+
+

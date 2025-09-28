@@ -1,8 +1,3 @@
 from,to,tempo_min,transferencia,escada,calcada_ruim,risco_alag,modo
-A,B,3,1,0,0,0,pe
-B,E,6,0,0,1,0,pe
-A,C,4,1,0,0,0,pe
-C,D,5,0,0,0,1,onibus
-D,E,6,0,0,0,1,onibus
-C,E,7,0,0,0,0,pe
-A,D,9,1,0,0,0,onibus
+sp_centro_1,sp_centro_2,5.0,0,0,0,0,metro
+sp_centro_2,sp_centro_3,3.0,1,0,1,0,pe

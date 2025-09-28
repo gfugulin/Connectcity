@@ -697,3 +697,5 @@ class SPIntegrationTests:
             
         except Exception as e:
             logger.error(f"❌ Erro ao exportar resultados: {e}")
+
+

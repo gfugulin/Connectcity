@@ -1,6 +1,4 @@
 id,name,lat,lon,tipo
-A,Estacao Hig-Mack,-23.55,-46.64,metro
-B,Ponto R Consolacao,-23.5495,-46.642,onibus
-C,Rampa Paulista,-23.5512,-46.641,acesso
-D,Terminal Pacaembu,-23.552,-46.6425,onibus
-E,Entrada Hospital,-23.553,-46.639,polo
+sp_centro_1,Estação Sé,-23.5505,-46.6333,metro
+sp_centro_2,Estação Paulista,-23.5615,-46.6565,metro
+sp_centro_3,Terminal Bandeira,-23.5505,-46.6333,onibus

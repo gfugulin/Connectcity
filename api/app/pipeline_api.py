@@ -8,11 +8,11 @@ import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
 
-from ..integration.pipeline_manager import PipelineManager, PipelineConfig, PipelineStatus
-from ..integration.realtime_processor import RealTimeProcessor
-from ..integration.smart_cache import SmartCache
-from ..integration.data_streaming import DataStreamer
-from ..integration.performance_monitor import PerformanceMonitor
+from integration.pipeline_manager import PipelineManager, PipelineConfig, PipelineStatus
+from integration.realtime_processor import RealTimeProcessor
+from integration.smart_cache import SmartCache
+from integration.data_streaming import DataStreamer
+from integration.performance_monitor import PerformanceMonitor
 
 logger = logging.getLogger(__name__)
 
@@ -447,3 +447,5 @@ async def get_pipeline_config(
     except Exception as e:
         logger.error(f"❌ Erro ao obter configuração do pipeline: {e}")
         raise HTTPException(status_code=500, detail=f"Erro ao obter configuração: {str(e)}")
+
+

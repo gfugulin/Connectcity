@@ -9,7 +9,7 @@ class RouteRequestValidator(BaseModel):
     """Validador para requisições de rota"""
     from_id: str = Field(alias="from", min_length=1, max_length=16)
     to_id: str = Field(alias="to", min_length=1, max_length=16)
-    perfil: str = Field(..., regex="^(padrao|pcd)$")
+    perfil: str = Field(..., pattern="^(padrao|pcd)$")
     chuva: bool = Field(default=False)
     k: int = Field(default=1, ge=1, le=10)
     
@@ -31,7 +31,7 @@ class RouteRequestValidator(BaseModel):
 class EdgeToFixValidator(BaseModel):
     """Validador para requisições de edge-to-fix"""
     top: int = Field(default=3, ge=1, le=20)
-    perfil: str = Field(default="padrao", regex="^(padrao|pcd)$")
+    perfil: str = Field(default="padrao", pattern="^(padrao|pcd)$")
     chuva: bool = Field(default=False)
     
     @validator('perfil')
@@ -48,7 +48,7 @@ class NodeValidator(BaseModel):
     name: str = Field(..., min_length=1, max_length=128)
     lat: float = Field(..., ge=-90, le=90)
     lon: float = Field(..., ge=-180, le=180)
-    tipo: str = Field(..., regex="^(metro|onibus|acesso|polo)$")
+    tipo: str = Field(..., pattern="^(metro|onibus|acesso|polo)$")
     
     @validator('id')
     def validate_node_id(cls, v):
@@ -66,7 +66,7 @@ class EdgeValidator(BaseModel):
     escada: int = Field(..., ge=0, le=1)
     calcada_ruim: int = Field(..., ge=0, le=1)
     risco_alag: int = Field(..., ge=0, le=1)
-    modo: str = Field(..., regex="^(pe|onibus|metro|trem)$")
+    modo: str = Field(..., pattern="^(pe|onibus|metro|trem)$")
     
     @validator('from_id', 'to_id')
     def validate_node_ids(cls, v):

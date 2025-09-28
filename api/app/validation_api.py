@@ -8,8 +8,8 @@ import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 
-from ..integration.sp_data_validator import SPDataValidator, ValidationLevel
-from ..integration.integration_tests import SPIntegrationTests
+from integration.sp_data_validator import SPDataValidator, ValidationLevel
+from integration.integration_tests import SPIntegrationTests
 
 logger = logging.getLogger(__name__)
 
@@ -472,3 +472,5 @@ async def update_validation_level(
     except Exception as e:
         logger.error(f"❌ Erro ao atualizar nível de validação: {e}")
         raise HTTPException(status_code=500, detail=f"Erro ao atualizar nível: {str(e)}")
+
+

@@ -1,8 +1,14 @@
 import ctypes as ct
 from pathlib import Path
 from typing import List, Tuple
+import platform
 
-LIB_PATH = Path(__file__).resolve().parents[2]/"core-c"/"build"/"libconneccity.so"
+# Detectar sistema operacional e usar biblioteca apropriada
+if platform.system() == "Windows":
+    LIB_PATH = Path(__file__).resolve().parents[2]/"core-c"/"build"/"libconneccity.dll"
+else:
+    LIB_PATH = Path(__file__).resolve().parents[2]/"core-c"/"build"/"libconneccity.so"
+
 lib = ct.CDLL(str(LIB_PATH))
 
 class CostParams(ct.Structure):
@@ -85,8 +91,8 @@ class Engine:
         for i in range(result.count):
             imp = result.improvements[i]
             improvements.append({
-                "from": imp.from,
-                "to": imp.to,
+                "from_node": getattr(imp, 'from'),
+                "to_node": imp.to,
                 "issue_type": imp.issue_type.decode('utf-8'),
                 "current_cost": imp.current_cost,
                 "potential_savings": imp.potential_savings,

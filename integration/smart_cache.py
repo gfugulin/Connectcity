@@ -620,3 +620,5 @@ class SmartCache:
             'strategy': self.strategy.value,
             'metrics': self.get_metrics()
         }
+
+

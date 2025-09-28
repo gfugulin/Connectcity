@@ -2,6 +2,16 @@
 #define CONNEC_GRAPH_H
 #include <stdint.h>
 
+#ifdef _WIN32
+#  ifdef CONNEC_BUILD
+#    define CONNEC_API __declspec(dllexport)
+#  else
+#    define CONNEC_API __declspec(dllimport)
+#  endif
+#else
+#  define CONNEC_API
+#endif
+
 typedef struct Edge {
   int to;
   double t_min;            // tempo_min
@@ -25,14 +35,14 @@ typedef struct CostParams {
   int perfil_pcd; // 0/1 (mantido para futura customização)
 } CostParams;
 
-Graph* load_graph_from_csv(const char* nodes_csv, const char* edges_csv);
-void    free_graph(Graph* g);
+CONNEC_API Graph* load_graph_from_csv(const char* nodes_csv, const char* edges_csv);
+CONNEC_API void    free_graph(Graph* g);
 
-Route   dijkstra_shortest(Graph* g, int s, int t, CostParams p);
-int     k_shortest_yen(Graph* g, int s, int t, CostParams p, int k, Route* out);
-void    free_route(Route* r);
+CONNEC_API Route   dijkstra_shortest(Graph* g, int s, int t, CostParams p);
+CONNEC_API int     k_shortest_yen(Graph* g, int s, int t, CostParams p, int k, Route* out);
+CONNEC_API void    free_route(Route* r);
 
-int     node_index_by_id(Graph* g, const char* id);
+CONNEC_API int     node_index_by_id(Graph* g, const char* id);
 
 // Edge analysis functions
 typedef struct {
@@ -51,7 +61,7 @@ typedef struct {
     int capacity;
 } EdgeAnalysisResult;
 
-EdgeAnalysisResult* analyze_edge_improvements(Graph* g, CostParams p, int max_results);
-void                free_edge_analysis(EdgeAnalysisResult* result);
+CONNEC_API EdgeAnalysisResult* analyze_edge_improvements(Graph* g, CostParams p, int max_results);
+CONNEC_API void                free_edge_analysis(EdgeAnalysisResult* result);
 
 #endif
