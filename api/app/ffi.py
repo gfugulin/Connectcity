@@ -60,6 +60,12 @@ class Engine:
 
     def idx(self, node_id: str) -> int:
         return lib.node_index_by_id(self.g, node_id.encode())
+    
+    def node_id(self, idx: int) -> str:
+        """Obter ID do nó por índice"""
+        if idx < 0 or idx >= self.g.contents.n:
+            return ""
+        return self.g.contents.nodes[idx].id.decode()
 
     def best(self, s: int, t: int, p: CostParams) -> Tuple[List[int], float]:
         r = lib.dijkstra_shortest(self.g, s, t, p)

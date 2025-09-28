@@ -16,6 +16,7 @@ from .real_data_api import real_data_router
 from .sp_data_api import sp_data_router
 from .pipeline_api import pipeline_router
 from .validation_api import validation_router
+from .graph_analysis_api import graph_analysis_router
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 NODES = os.path.join(DATA_DIR, "nodes.csv")
@@ -39,6 +40,7 @@ app.include_router(real_data_router)
 app.include_router(sp_data_router)
 app.include_router(pipeline_router)
 app.include_router(validation_router)
+app.include_router(graph_analysis_router)
 
 # Configurar logging estruturado
 logging.basicConfig(level=logging.INFO, format='%(message)s')
@@ -157,7 +159,8 @@ async def root():
             "real_data": "/real-data",
             "sp_data": "/sp-data",
             "pipeline": "/pipeline",
-            "validation": "/validation"
+            "validation": "/validation",
+            "graph_analysis": "/graph"
         },
         "engine_loaded": engine is not None
     }
@@ -199,7 +202,7 @@ async def get_route(request: RouteRequest):
         path, cost = engine.best(s, t, params)
         
         if not path:
-            raise RouteNotFoundException(f"Nenhuma rota encontrada entre {request.from_id} e {request.to_id}")
+            raise RouteNotFoundException(request.from_id, request.to_id)
         
         return {
             "path": path,
@@ -240,10 +243,25 @@ async def get_alternatives(request: RouteRequest):
         alternatives = engine.k_alternatives(s, t, params, request.k)
         
         if not alternatives:
-            raise RouteNotFoundException(f"Nenhuma rota encontrada entre {request.from_id} e {request.to_id}")
+            raise RouteNotFoundException(request.from_id, request.to_id)
+        
+        # Construir alternativas com dados completos
+        alt_list = []
+        for i, (path, cost) in enumerate(alternatives):
+            # Converter índices para IDs de nós
+            path_ids = [engine.node_id(idx) for idx in path]
+            
+            alt = Alt(
+                id=i,
+                tempo_total_min=cost,
+                transferencias=0,  # TODO: calcular transferências
+                path=path_ids,
+                barreiras_evitas=[]
+            )
+            alt_list.append(alt)
         
         return AlternativesResponse(
-            alternatives=[Alt(path=path, cost=cost) for path, cost in alternatives],
+            alternatives=alt_list,
             from_id=request.from_id,
             to_id=request.to_id,
             profile=request.perfil,
@@ -266,7 +284,7 @@ async def get_profiles():
 # Tratamento de exceções
 @app.exception_handler(ConneccityException)
 async def conneccity_exception_handler(request: Request, exc: ConneccityException):
-    return handle_conneccity_exception(request, exc)
+    return handle_conneccity_exception(exc)
 
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):

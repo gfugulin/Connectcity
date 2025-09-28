@@ -12,3 +12,5 @@ python-multipart>=0.0.7
 aiohttp==3.9.1
 redis==5.0.1
 psutil==5.9.6
+networkx==3.2.1
+pandas==2.2.2
