@@ -140,6 +140,28 @@ async def log_middleware(request: Request, call_next):
         logger.error(f"[{req_id}] ERROR {dt:.3f}s: {str(e)}")
         raise
 
+# Endpoint raiz
+@app.get("/")
+async def root():
+    """Endpoint raiz da API"""
+    return {
+        "message": "Conneccity API - Sistema de Rotas Acessíveis e Resilientes",
+        "version": "v1",
+        "status": "online",
+        "endpoints": {
+            "health": "/health",
+            "docs": "/docs",
+            "route": "/route",
+            "alternatives": "/alternatives",
+            "profiles": "/profiles",
+            "real_data": "/real-data",
+            "sp_data": "/sp-data",
+            "pipeline": "/pipeline",
+            "validation": "/validation"
+        },
+        "engine_loaded": engine is not None
+    }
+
 # Endpoint de health check
 @app.get("/health")
 async def health_check():
