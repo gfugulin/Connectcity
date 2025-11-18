@@ -1,0 +1,89 @@
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-50: #eef7ff;
+        --primary-100: #d9edff;
+        --primary-200: #bce1ff;
+        --primary-300: #8ed0ff;
+        --primary-400: #5ab8ff;
+        --primary-500: #309eff;
+        --primary-600: #0d80f2;
+        --primary-700: #0066d1;
+        --primary-800: #0055b3;
+        --primary-900: #084594;
+        --primary-950: #042757;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between group/design-root overflow-x-hidden" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+<div class="flex flex-col">
+<header class="flex items-center justify-between p-4">
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-2xl text-gray-700">close</span>
+</button>
+<h1 class="text-xl font-bold text-gray-900">Adicionar Favorito</h1>
+<div class="w-10"></div>
+</header>
+<main class="flex flex-col gap-8 p-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-gray-700" for="routeName">Nome do favorito</label>
+<input class="form-input w-full rounded-lg border-gray-300 bg-gray-50 p-4 text-base text-gray-900 placeholder-gray-400 focus:border-var(--primary-600) focus:ring-var(--primary-600)" id="routeName" placeholder="Ex: Casa, Trabalho..." value=""/>
+</div>
+<div class="flex flex-col gap-4">
+<h2 class="text-lg font-semibold text-gray-900">Escolha um ícone</h2>
+<div class="grid grid-cols-3 gap-4">
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">home</span>
+<span class="text-sm font-medium">Casa</span>
+<input checked="" class="sr-only" name="icon" type="radio" value="home"/>
+</label>
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">work</span>
+<span class="text-sm font-medium">Trabalho</span>
+<input class="sr-only" name="icon" type="radio" value="work"/>
+</label>
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">school</span>
+<span class="text-sm font-medium">Faculdade</span>
+<input class="sr-only" name="icon" type="radio" value="school"/>
+</label>
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">fitness_center</span>
+<span class="text-sm font-medium">Academia</span>
+<input class="sr-only" name="icon" type="radio" value="fitness_center"/>
+</label>
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">shopping_cart</span>
+<span class="text-sm font-medium">Mercado</span>
+<input class="sr-only" name="icon" type="radio" value="shopping_cart"/>
+</label>
+<label class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-700 has-[:checked]:border-var(--primary-600) has-[:checked]:bg-var(--primary-50) has-[:checked]:text-var(--primary-700) cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl">place</span>
+<span class="text-sm font-medium">Outro</span>
+<input class="sr-only" name="icon" type="radio" value="place"/>
+</label>
+</div>
+</div>
+</main>
+</div>
+<footer class="bg-white p-4 shadow-[0_-1px_3px_rgba(0,0,0,0.1)]">
+<button class="flex w-full items-center justify-center rounded-lg bg-var(--primary-600) px-5 py-3.5 text-base font-bold text-white shadow-sm hover:bg-var(--primary-700) focus:outline-none focus:ring-2 focus:ring-var(--primary-500) focus:ring-offset-2">
+          Salvar Favorito
+        </button>
+</footer>
+</div>
+
+</body></html>

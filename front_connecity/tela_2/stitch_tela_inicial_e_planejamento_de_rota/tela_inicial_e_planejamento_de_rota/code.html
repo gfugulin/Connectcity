@@ -1,0 +1,103 @@
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Public+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-50: #f0f8ff;
+        --primary-100: #e0f2fe;
+        --primary-200: #bae6fd;
+        --primary-300: #7dd3fc;
+        --primary-400: #38bdf8;
+        --primary-500: #0d80f2;
+        --primary-600: #0284c7;
+        --primary-700: #0369a1;
+        --primary-800: #075985;
+        --primary-900: #0c4a6e;
+        --primary-950: #082f49;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white" style='font-family: "Public Sans", sans-serif;'>
+<div class="relative min-h-screen w-full">
+<div class="absolute inset-0 z-0 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCMbXfisRitipxk4cXy0hUlflurO2rvbSoPCA5mnM9GWfD3nBUj0sy0EBSnXcqoBL03-fl2SnsFn0TZQQbt_KM-NZyfydW6e6lMR_D3no3UfdUbwZRQu9n6rWWId36IoClx0IgGyEhWUGqxeZmJARzj1yzTmjHjrPOj7JgOzqC3OExemiwF9pyWqHXo7T7jRB5l1v3NASH629IKu-WdBz4KKtnmWEpCzKgY9rej5H6uH6lsmkC2JNzCZhKN9EQHzq7OGr_4Y-h0tcqH");'></div>
+<div class="absolute inset-0 z-10 bg-black/20"></div>
+<div class="relative z-20 flex flex-col h-screen">
+<header class="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm">
+<span class="material-symbols-outlined text-gray-800 text-3xl">menu</span>
+<h1 class="text-xl font-bold text-gray-900">CONNECITY</h1>
+<span class="material-symbols-outlined text-gray-800 text-3xl">notifications</span>
+</header>
+<div class="flex-grow"></div>
+<div class="bg-white rounded-t-3xl p-4 shadow-2xl">
+<div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+<div class="space-y-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">trip_origin</span>
+<input class="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base" type="text" value="Sua localização"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">location_on</span>
+<input class="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base" placeholder="Destino" type="text"/>
+</div>
+</div>
+<div class="mt-5">
+<h3 class="text-gray-800 text-base font-semibold mb-2">Perfil de Mobilidade</h3>
+<div class="flex space-x-3">
+<label class="flex-1">
+<input checked="" class="sr-only" name="mobility-profile" type="radio" value="padrao"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border-2 border-primary-500 bg-primary-50 text-primary-700 font-semibold cursor-pointer">
+<span class="material-symbols-outlined mb-1">directions_walk</span>
+<span class="text-xs">Padrão</span>
+</div>
+</label>
+<label class="flex-1">
+<input class="sr-only" name="mobility-profile" type="radio" value="idoso"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 peer-checked:text-primary-700">
+<span class="material-symbols-outlined mb-1">elderly</span>
+<span class="text-xs">Idoso</span>
+</div>
+</label>
+<label class="flex-1">
+<input class="sr-only" name="mobility-profile" type="radio" value="pcd"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 peer-checked:text-primary-700">
+<span class="material-symbols-outlined mb-1">accessible</span>
+<span class="text-xs">PcD</span>
+</div>
+</label>
+</div>
+</div>
+<div class="mt-5">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-12 px-6 bg-primary-500 text-white text-base font-bold shadow-lg shadow-primary-500/30 hover:bg-primary-600 transition-colors">
+              Buscar Rota
+              <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="flex justify-around items-center border-t border-gray-200 mt-4 pt-2 -mx-4">
+<a class="flex flex-col items-center gap-1 text-primary-600 flex-1 py-2" href="#">
+<span class="material-symbols-outlined text-3xl">map</span>
+<span class="text-xs font-medium">Rotas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-gray-500 hover:text-primary-600 flex-1 py-2" href="#">
+<span class="material-symbols-outlined text-3xl">bookmark</span>
+<span class="text-xs font-medium">Favoritos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-gray-500 hover:text-primary-600 flex-1 py-2" href="#">
+<span class="material-symbols-outlined text-3xl">person</span>
+<span class="text-xs font-medium">Perfil</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
