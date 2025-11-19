@@ -21,10 +21,40 @@ def load_graph_data() -> Tuple[pd.DataFrame, pd.DataFrame]:
         nodes_file = data_dir / "nodes.csv"
         edges_file = data_dir / "edges.csv"
         
-        nodes = pd.read_csv(nodes_file)
-        edges = pd.read_csv(edges_file)
+        # Verificar se os arquivos existem
+        if not nodes_file.exists():
+            raise FileNotFoundError(f"Arquivo de nós não encontrado: {nodes_file}")
+        if not edges_file.exists():
+            raise FileNotFoundError(f"Arquivo de arestas não encontrado: {edges_file}")
+        
+        # Verificar se os arquivos não estão vazios
+        if nodes_file.stat().st_size == 0:
+            raise ValueError(f"Arquivo de nós está vazio: {nodes_file}")
+        if edges_file.stat().st_size == 0:
+            raise ValueError(f"Arquivo de arestas está vazio: {edges_file}")
+        
+        # Tentar ler os arquivos CSV
+        try:
+            nodes = pd.read_csv(nodes_file)
+            edges = pd.read_csv(edges_file)
+        except pd.errors.EmptyDataError as e:
+            raise ValueError(f"Arquivo CSV vazio ou sem colunas: {str(e)}")
+        except pd.errors.ParserError as e:
+            raise ValueError(f"Erro ao fazer parse do arquivo CSV: {str(e)}")
+        
+        # Verificar se os DataFrames não estão vazios
+        if nodes.empty:
+            raise ValueError(f"Arquivo de nós não contém dados: {nodes_file}")
+        if edges.empty:
+            raise ValueError(f"Arquivo de arestas não contém dados: {edges_file}")
         
         return nodes, edges
+    except FileNotFoundError as e:
+        logger.error(f"Arquivo não encontrado: {e}")
+        raise HTTPException(status_code=404, detail=f"Arquivo não encontrado: {str(e)}")
+    except ValueError as e:
+        logger.error(f"Erro de validação: {e}")
+        raise HTTPException(status_code=400, detail=f"Erro ao validar dados: {str(e)}")
     except Exception as e:
         logger.error(f"Erro ao carregar dados do grafo: {e}")
         raise HTTPException(status_code=500, detail=f"Erro ao carregar dados: {str(e)}")

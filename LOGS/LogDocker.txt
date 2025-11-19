@@ -1,0 +1,31 @@
+2025-11-18 22:35:23 [BOOT] CSV paths -> NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
+2025-11-18 22:35:23 [BOOT] DATA_DIR=/app/data
+2025-11-18 22:35:23 [BOOT] NODES existe: True
+2025-11-18 22:35:23 [BOOT] EDGES existe: True
+2025-11-18 22:35:23 [BOOT] ⚠️ Diretório GTFS não encontrado. Caminhos testados: ['GTFS', '/app/GTFS', '/app/api/app/../../GTFS', '/app/api/app/../../../GTFS']
+2025-11-18 22:35:23 🔐 Tentando autenticar na API Olho Vivo
+2025-11-18 22:35:23    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
+2025-11-18 22:35:23    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
+2025-11-18 22:35:23    Token completo (últimos 10 chars): ...cb5d63be81
+2025-11-18 22:35:23    Tentando método 1: POST com token na query string
+2025-11-18 22:35:23    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
+2025-11-18 22:35:24    Status code: 200
+2025-11-18 22:35:24    Response text: false
+2025-11-18 22:35:24    Response headers: {'Date': 'Wed, 19 Nov 2025 01:35:24 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '5', 'Connection': 'keep-alive', 'CF-RAY': '9a0bf8823c9ead09-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
+2025-11-18 22:35:24    Response JSON: False (tipo: bool)
+2025-11-18 22:35:24 ❌ Falha na autenticação da API Olho Vivo
+2025-11-18 22:35:24    Resposta recebida: false
+2025-11-18 22:35:24    Status: 200
+2025-11-18 22:35:24    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95...
+2025-11-18 22:35:24    ⚠️ Verifique se o token está correto e ativo em: https://www.sptrans.com.br/desenvolvedores/
+2025-11-18 22:35:24 ⚠️ API Olho Vivo não disponível (autenticação falhou)
+2025-11-18 22:35:24 ⚠️ GTFS local não configurado (gtfs_dir=None)
+2025-11-18 22:35:24 📊 Status das fontes de dados: {'olho_vivo': False, 'gtfs_local': False}
+2025-11-18 22:35:24 Engine inicializado com CSV primário: NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
+2025-11-18 22:35:24 ✅ Engine inicializado com sucesso!
+2025-11-18 22:35:24 Dados do grafo carregados: 3 nós, 2 arestas
+2025-11-18 22:35:24 ✅ Dados do grafo carregados para utilitários (arquivos primários)
+2025-11-18 22:35:24 INFO:     Started server process [1]
+2025-11-18 22:35:24 INFO:     Waiting for application startup.
+2025-11-18 22:35:24 INFO:     Application startup complete.
+2025-11-18 22:35:24 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)

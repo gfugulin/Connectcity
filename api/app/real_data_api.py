@@ -11,6 +11,8 @@ from integration.data_integrator import DataIntegrator, CITY_BOUNDS, GTFS_SOURCE
 from integration.gtfs_processor import GTFSProcessor
 from integration.osm_processor import OSMProcessor
 from .exceptions import ConneccityException, CoreLibraryException
+import os
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +102,157 @@ async def integrate_city_data(
     except Exception as e:
         logger.error(f"Erro ao iniciar integração: {str(e)}")
         raise CoreLibraryException(f"Erro ao iniciar integração: {str(e)}")
+
+@real_data_router.get("/hybrid/status")
+async def get_hybrid_status():
+    """
+    Retorna status das fontes de dados híbridas (API Olho Vivo + GTFS Local)
+    """
+    try:
+        from integration.hybrid_data_processor import HybridDataProcessor
+        import os
+        
+        olho_vivo_token = os.getenv(
+            "OLHO_VIVO_TOKEN",
+            "1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81"
+        )
+        gtfs_dir = os.getenv("GTFS_LOCAL_DIR", "GTFS")
+        
+        processor = HybridDataProcessor(
+            olho_vivo_token=olho_vivo_token,
+            gtfs_dir=gtfs_dir if os.path.isdir(gtfs_dir) else None
+        )
+        
+        status = processor.initialize()
+        info = processor.get_data_source_info()
+        
+        return {
+            "status": status,
+            "info": info,
+            "recommendation": (
+                "✅ Configuração ideal: ambas as fontes disponíveis" 
+                if status['olho_vivo'] and status['gtfs_local']
+                else "⚠️ Recomendado ter ambas as fontes para melhor experiência"
+            )
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter status híbrido: {str(e)}")
+        raise CoreLibraryException(f"Erro ao obter status: {str(e)}")
+
+@real_data_router.post("/process-local-gtfs")
+async def process_local_gtfs(gtfs_dir: str = Query(..., description="Caminho do diretório com arquivos GTFS")):
+    """
+    Processa arquivos GTFS de um diretório local (já extraídos)
+    
+    Exemplo: /process-local-gtfs?gtfs_dir=GTFS
+    """
+    try:
+        # Verificar se o diretório existe
+        if not os.path.isdir(gtfs_dir):
+            raise HTTPException(
+                status_code=404,
+                detail=f"Diretório não encontrado: {gtfs_dir}"
+            )
+        
+        # Verificar se há arquivos GTFS essenciais
+        required_files = ["stops.txt", "routes.txt", "trips.txt", "stop_times.txt"]
+        missing_files = []
+        for file in required_files:
+            file_path = os.path.join(gtfs_dir, file)
+            if not os.path.isfile(file_path):
+                missing_files.append(file)
+        
+        if missing_files:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Arquivos GTFS essenciais não encontrados: {', '.join(missing_files)}"
+            )
+        
+        # Processar arquivos GTFS
+        gtfs_processor = GTFSProcessor()
+        gtfs_processor.process_local_gtfs_directory(gtfs_dir)
+        
+        # Converter para formato Conneccity (retorna listas de dicionários)
+        nodes_list, edges_list = gtfs_processor.convert_to_conneccity_format()
+        
+        # Converter para DataFrames
+        nodes_df = pd.DataFrame(nodes_list)
+        edges_df = pd.DataFrame(edges_list)
+        
+        # Salvar dados processados
+        output_dir = os.path.join("data", "gtfs", "processed")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        nodes_file = os.path.join(output_dir, "nodes.csv")
+        edges_file = os.path.join(output_dir, "edges.csv")
+        
+        nodes_df.to_csv(nodes_file, index=False)
+        edges_df.to_csv(edges_file, index=False)
+        
+        return {
+            "message": "Arquivos GTFS processados com sucesso",
+            "gtfs_directory": gtfs_dir,
+            "nodes_count": len(nodes_df),
+            "edges_count": len(edges_df),
+            "output_files": {
+                "nodes": nodes_file,
+                "edges": edges_file
+            },
+            "note": "Use /real-data/integrate para integrar com dados OSM"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erro ao processar GTFS local: {str(e)}")
+        raise CoreLibraryException(f"Erro ao processar GTFS local: {str(e)}")
+
+@real_data_router.post("/export-to-main")
+async def export_integrated_to_main():
+    """Exporta dados integrados para nodes.csv e edges.csv principais"""
+    try:
+        import shutil
+        from pathlib import Path
+        
+        integrated_nodes = Path("data/integrated/integrated_nodes.csv")
+        integrated_edges = Path("data/integrated/integrated_edges.csv")
+        
+        main_nodes = Path("data/nodes.csv")
+        main_edges = Path("data/edges.csv")
+        
+        if not integrated_nodes.exists() or not integrated_edges.exists():
+            raise HTTPException(
+                status_code=404,
+                detail="Dados integrados não encontrados. Execute a integração primeiro."
+            )
+        
+        # Criar backup dos arquivos atuais
+        if main_nodes.exists():
+            shutil.copy(main_nodes, Path("data/nodes.csv.backup"))
+        if main_edges.exists():
+            shutil.copy(main_edges, Path("data/edges.csv.backup"))
+        
+        # Copiar dados integrados
+        shutil.copy(integrated_nodes, main_nodes)
+        shutil.copy(integrated_edges, main_edges)
+        
+        # Contar linhas
+        nodes_count = sum(1 for _ in open(main_nodes)) - 1  # -1 para header
+        edges_count = sum(1 for _ in open(main_edges)) - 1
+        
+        return {
+            "message": "Dados integrados exportados com sucesso",
+            "nodes_file": str(main_nodes),
+            "edges_file": str(main_edges),
+            "nodes_count": nodes_count,
+            "edges_count": edges_count,
+            "note": "Reinicie a API para carregar os novos dados"
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao exportar dados: {str(e)}")
+        raise CoreLibraryException(f"Erro ao exportar dados: {str(e)}")
 
 async def _run_integration_task(city_name: str, gtfs_url: str, bbox: Tuple[float, float, float, float]):
     """Executa integração em background"""

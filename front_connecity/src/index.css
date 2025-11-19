@@ -1,0 +1,95 @@
+/* Leaflet CSS - @import deve ser a primeira declaração */
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-50: #f0f8ff;
+  --primary-100: #e0f2fe;
+  --primary-200: #bae6fd;
+  --primary-300: #7dd3fc;
+  --primary-400: #38bdf8;
+  --primary-500: #0d80f2;
+  --primary-600: #0284c7;
+  --primary-700: #0369a1;
+  --primary-800: #075985;
+  --primary-900: #0c4a6e;
+  --primary-950: #082f49;
+  
+  --c-primary: #0d7ff2;
+  --c-text-primary: #111827;
+  --c-text-secondary: #6b7280;
+  --c-background: #ffffff;
+  --c-surface: #f9fafb;
+  --c-border: #e5e7eb;
+  --c-warning: #f59e0b;
+  --c-warning-surface: #fffbeb;
+  
+  --primary-color: #0d80f2;
+  --secondary-color: #f0f2f5;
+  --text-primary: #111418;
+  --text-secondary: #60758a;
+}
+
+body {
+  margin: 0;
+  font-family: 'Public Sans', sans-serif;
+  min-height: max(884px, 100dvh);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+/* Estilos para marcadores customizados do mapa */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Ajustes para o mapa Leaflet */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+/* Estilos para sliders de preferências */
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+}
+
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0d80f2;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"].slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0d80f2;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+

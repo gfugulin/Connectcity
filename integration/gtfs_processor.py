@@ -121,6 +121,32 @@ class GTFSProcessor:
             logger.error(f"Erro ao extrair dados GTFS: {str(e)}")
             raise
     
+    def process_local_gtfs_directory(self, gtfs_dir: str):
+        """
+        Processa arquivos GTFS de um diretório local (já extraídos)
+        
+        Args:
+            gtfs_dir: Caminho do diretório com arquivos GTFS
+        """
+        try:
+            gtfs_path = Path(gtfs_dir)
+            if not gtfs_path.exists():
+                raise FileNotFoundError(f"Diretório GTFS não encontrado: {gtfs_dir}")
+            
+            logger.info(f"Processando arquivos GTFS do diretório: {gtfs_dir}")
+            
+            # Carregar todos os arquivos GTFS
+            self.load_stops(str(gtfs_path))
+            self.load_routes(str(gtfs_path))
+            self.load_trips(str(gtfs_path))
+            self.load_stop_times(str(gtfs_path))
+            
+            logger.info(f"✅ Arquivos GTFS processados: {len(self.stops)} paradas, {len(self.routes)} rotas, {len(self.trips)} viagens")
+            
+        except Exception as e:
+            logger.error(f"Erro ao processar diretório GTFS local: {str(e)}")
+            raise
+    
     def load_stops(self, extract_dir: str):
         """Carrega paradas do arquivo stops.txt"""
         try:

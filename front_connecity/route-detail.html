@@ -1,0 +1,118 @@
+<html><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Public+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<title>CONNECITY - Detalhes da Rota</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+  :root {
+    --primary-color: #0d80f2;
+    --secondary-color: #f0f2f5;
+    --text-primary: #111418;
+    --text-secondary: #60758a;
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+</style>
+<style>
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style>
+</head>
+<body class="bg-[var(--secondary-color)]">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between group/design-root overflow-x-hidden bg-white" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+<div>
+<header class="sticky top-0 z-10 bg-white shadow-sm">
+<div class="flex items-center p-4">
+<button class="text-[var(--text-primary)]" onclick="window.history.back()">
+<span class="material-symbols-outlined"> arrow_back_ios_new </span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-[var(--text-primary)]">Rota Detalhada</h1>
+<button class="text-[var(--text-primary)]" onclick="document.getElementById('favorite-popup').classList.remove('hidden')">
+<span class="material-symbols-outlined"> bookmark_add </span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+<div class="px-4 py-3">
+<div class="aspect-video w-full rounded-xl bg-gray-200 flex items-center justify-center shadow-md">
+<span class="text-gray-400">Mapa da rota</span>
+</div>
+</div>
+<section class="px-4 py-4">
+<h2 class="text-xl font-bold text-[var(--text-primary)]">Passo a Passo</h2>
+<div class="mt-4 space-y-2" id="steps-container">
+<!-- Passos serão inseridos aqui pelo JavaScript -->
+</div>
+</section>
+<section class="px-4 py-4">
+<h2 class="text-xl font-bold text-[var(--text-primary)]">Detalhes</h2>
+<div class="mt-4 rounded-lg bg-white p-4 shadow-sm" id="details-container">
+<!-- Detalhes serão inseridos aqui pelo JavaScript -->
+</div>
+<div class="mt-4">
+<button onclick="saveCurrentRoute()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-sm">
+<span class="material-symbols-outlined text-lg"> download </span>
+<span>Salvar para acesso offline</span>
+</button>
+</div>
+</section>
+</main>
+</div>
+<footer class="fixed bottom-0 z-10 w-full bg-white shadow-[0_-1px_3px_rgba(0,0,0,0.1)]">
+<div class="flex gap-4 p-4">
+<button class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--secondary-color)] px-4 py-3 text-sm font-bold text-[var(--text-primary)]">
+<span class="material-symbols-outlined text-lg"> report </span>
+<span class="truncate">Reportar Barreira</span>
+</button>
+<button class="flex-1 cursor-pointer rounded-lg bg-[var(--primary-color)] px-4 py-3 text-sm font-bold text-white">
+<span class="truncate">Iniciar Rota</span>
+</button>
+</div>
+<nav class="flex justify-around border-t border-gray-200 pb-2 pt-1">
+<a class="flex flex-col items-center gap-1 text-[var(--primary-color)]" href="index.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1"> map </span>
+<p class="text-xs font-medium">Rotas</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-[var(--text-secondary)]" href="favorites.html">
+<span class="material-symbols-outlined"> bookmark </span>
+<p class="text-xs font-medium">Favoritos</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-[var(--text-secondary)]" href="profile.html">
+<span class="material-symbols-outlined"> person </span>
+<p class="text-xs font-medium">Perfil</p>
+</a>
+</nav>
+<div class="h-safe-area-bottom bg-white"></div>
+</footer>
+</div>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden" id="favorite-popup">
+<div class="mx-4 w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+<h3 class="text-center text-lg font-bold text-[var(--text-primary)]">Adicionar aos Favoritos</h3>
+<p class="mt-2 text-center text-sm text-[var(--text-secondary)]">Dê um nome para esta rota para salvá-la.</p>
+<form class="mt-6 space-y-4" onsubmit="event.preventDefault(); saveFavoriteFromPopup();">
+<div>
+<label class="text-sm font-medium text-[var(--text-primary)]" for="routeName">Nome da Rota</label>
+<input class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="routeName" name="routeName" placeholder="Ex: Casa, Trabalho" type="text"/>
+</div>
+<div class="flex justify-end gap-3">
+<button class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-[var(--text-primary)]" onclick="document.getElementById('favorite-popup').classList.add('hidden')" type="button">Cancelar</button>
+<button class="rounded-lg bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white" type="submit">Salvar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/router.js"></script>
+<script src="js/route-detail.js"></script>
+</body></html>
+

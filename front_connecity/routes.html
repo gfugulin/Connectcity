@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CONNECITY - Rotas Acessíveis</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Public+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+  :root {
+    --c-primary: #0d7ff2;
+    --c-text-primary: #111827;
+    --c-text-secondary: #6b7280;
+    --c-background: #ffffff;
+    --c-surface: #f9fafb;
+    --c-border: #e5e7eb;
+    --c-warning: #f59e0b;
+    --c-warning-surface: #fffbeb;
+  }
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
+</style>
+<style>
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style>
+</head>
+<body class="bg-[var(--c-background)]" style='font-family: "Public Sans", sans-serif;'>
+<div class="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
+<div class="flex-1">
+<header class="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--c-border)] bg-[var(--c-background)] p-4">
+<button class="flex items-center justify-center text-[var(--c-text-primary)]" onclick="window.history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-[var(--c-text-primary)]">Rotas</h1>
+<div class="w-8"></div>
+</header>
+<main class="p-4">
+<div class="space-y-4" id="routes-container">
+<!-- Rotas serão inseridas aqui pelo JavaScript -->
+</div>
+</main>
+</div>
+<footer class="sticky bottom-0 border-t border-[var(--c-border)] bg-[var(--c-background)] px-4 pb-3 pt-2">
+<nav class="flex justify-around">
+<a class="flex flex-1 flex-col items-center gap-1 text-[var(--c-primary)]" href="index.html">
+<span class="material-symbols-outlined">map</span>
+<span class="text-xs font-medium">Rotas</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-[var(--c-text-secondary)]" href="favorites.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+<span class="text-xs font-medium">Favoritos</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-[var(--c-text-secondary)]" href="profile.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="text-xs font-medium">Perfil</span>
+</a>
+</nav>
+</footer>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/router.js"></script>
+<script src="js/routes.js"></script>
+</body></html>
+

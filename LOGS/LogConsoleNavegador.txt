@@ -1,0 +1,34 @@
+api.js:28 
+ POST http://localhost:8080/alternatives 404 (Not Found)
+searchRoutes	@	api.js:28
+handleSearch	@	Home.jsx:29
+
+api.js:37 Erro ao buscar rotas: 
+AxiosError {message: 'Request failed with status code 404', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
+code
+: 
+"ERR_BAD_REQUEST"
+config
+: 
+{transitional: {…}, adapter: Array(3), transformRequest: Array(1), transformResponse: Array(1), timeout: 0, …}
+message
+: 
+"Request failed with status code 404"
+name
+: 
+"AxiosError"
+request
+: 
+XMLHttpRequest {onreadystatechange: null, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}
+response
+: 
+{data: {…}, status: 404, statusText: 'Not Found', headers: AxiosHeaders, config: {…}, …}
+status
+: 
+404
+stack
+: 
+"AxiosError: Request failed with status code 404\n    at settle (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:1257:12)\n    at XMLHttpRequest.onloadend (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:1606:7)\n    at Axios.request (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:2223:41)\n    at async Object.searchRoutes (http://localhost:5173/src/services/api.js:28:19)\n    at async handleSearch (http://localhost:5173/src/pages/Home.jsx:42:22)"
+[[Prototype]]
+: 
+Error

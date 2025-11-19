@@ -37,7 +37,7 @@ class InvalidProfileException(ConneccityException):
         super().__init__(
             f"Perfil '{profile}' inválido", 
             "INVALID_PROFILE", 
-            {"profile": profile, "valid_profiles": ["padrao", "pcd"]}
+            {"profile": profile, "valid_profiles": ["padrao", "idoso", "pcd"]}
         )
 
 class ValidationException(ConneccityException):
