@@ -142,4 +142,3 @@ Se após essas correções a autenticação ainda falhar, pode ser necessário:
 2. Verificar se há alguma restrição adicional no token
 3. Verificar se o token precisa ser usado de uma forma específica
 
-

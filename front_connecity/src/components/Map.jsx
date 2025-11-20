@@ -85,11 +85,35 @@ export default function Map({ fromNode, toNode, routePath = null, showRealtime =
       setLoadingRealtime(true);
       try {
         const data = await api.obterPosicaoVeiculos(codigoLinha);
-        if (data && data.vs) {
-          setVeiculos(data.vs);
+        
+        // A estrutura de dados varia dependendo se codigoLinha foi fornecido:
+        // - Com codigoLinha: { hr: "...", vs: [...] }
+        // - Sem codigoLinha: { hr: "...", l: [{ vs: [...] }] }
+        let veiculosList = [];
+        
+        if (data) {
+          if (data.vs && Array.isArray(data.vs)) {
+            // Caso 1: codigoLinha fornecido - vs está diretamente no objeto
+            veiculosList = data.vs;
+          } else if (data.l && Array.isArray(data.l)) {
+            // Caso 2: codigoLinha não fornecido - vs está dentro de cada item em l
+            veiculosList = data.l.flatMap(linha => linha.vs || []);
+          }
         }
+        
+        // Filtrar veículos com coordenadas válidas
+        veiculosList = veiculosList.filter(v => 
+          v && 
+          typeof v.py === 'number' && 
+          typeof v.px === 'number' &&
+          !isNaN(v.py) && 
+          !isNaN(v.px)
+        );
+        
+        setVeiculos(veiculosList);
       } catch (error) {
         console.error('Erro ao buscar posições dos veículos:', error);
+        // Não limpar veiculos em caso de erro, manter última posição conhecida
       } finally {
         setLoadingRealtime(false);
       }
@@ -154,23 +178,30 @@ export default function Map({ fromNode, toNode, routePath = null, showRealtime =
       )}
 
       {/* Ônibus em tempo real */}
-      {showRealtime && veiculos.map((veiculo, index) => (
-        <Marker
-          key={`bus-${veiculo.p}-${index}`}
-          position={[veiculo.py, veiculo.px]}
-          icon={busIcon}
-        >
-          <Popup>
-            <div>
-              <strong>Ônibus {veiculo.p}</strong>
-              <br />
-              {veiculo.a ? '✅ Acessível' : '❌ Não acessível'}
-              <br />
-              <small>Atualizado em tempo real</small>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {showRealtime && veiculos.length > 0 && veiculos.map((veiculo, index) => {
+        // Validar coordenadas antes de renderizar
+        if (!veiculo || typeof veiculo.py !== 'number' || typeof veiculo.px !== 'number') {
+          return null;
+        }
+        
+        return (
+          <Marker
+            key={`bus-${veiculo.p || index}-${index}`}
+            position={[veiculo.py, veiculo.px]}
+            icon={busIcon}
+          >
+            <Popup>
+              <div>
+                <strong>Ônibus {veiculo.p || 'N/A'}</strong>
+                <br />
+                {veiculo.a ? '✅ Acessível' : '❌ Não acessível'}
+                <br />
+                <small>Atualizado em tempo real</small>
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
 
     </MapContainer>
   );

@@ -303,4 +303,3 @@ olho_vivo.authenticate()
 - [Portal de Desenvolvedores](https://www.sptrans.com.br/desenvolvedores/)
 - [Área de Login](https://www.sptrans.com.br/desenvolvedores/login-desenvolvedores/)
 
-

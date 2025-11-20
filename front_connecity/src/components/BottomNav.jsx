@@ -33,7 +33,7 @@ export default function BottomNav() {
       <Link
         to="/profile"
         className={`flex flex-col items-center gap-1 flex-1 py-2 ${
-          isActive('/profile') ? 'text-primary-600' : 'text-gray-500 hover:text-primary-600'
+          isActive('/profile') ? 'text-gray-500 hover:text-primary-600' : 'text-gray-500 hover:text-primary-600'
         }`}
       >
         <span className="material-symbols-outlined text-3xl">person</span>

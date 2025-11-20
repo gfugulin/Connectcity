@@ -556,4 +556,3 @@ for (const segment of route.segments) {
 3. **Marcadores intermediários:** Mostrar pontos de transferência
 4. **Geolocalização:** Usar localização atual como origem
 
-

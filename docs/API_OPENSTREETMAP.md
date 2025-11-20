@@ -421,4 +421,3 @@ Os dados OSM são convertidos em:
 
 **URL Testada:** `http://overpass-api.de/api/interpreter` ✅ Funcionando
 
-

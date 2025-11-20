@@ -180,7 +180,7 @@ export default function Home() {
                 onFocus={() => setShowSuggestions(prev => ({ ...prev, from: suggestions.from.length > 0 }))}
                 onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, from: false })), 200)}
                 className="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base"
-                placeholder="Sua localização"
+                placeholder="Digite origem (ex: node1)"
               />
               {showSuggestions.from && suggestions.from.length > 0 && (
                 <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -214,7 +214,7 @@ export default function Home() {
                 onFocus={() => setShowSuggestions(prev => ({ ...prev, to: suggestions.to.length > 0 }))}
                 onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, to: false })), 200)}
                 className="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base"
-                placeholder="Destino"
+                placeholder="Digite destino (ex: node2)"
               />
               {showSuggestions.to && suggestions.to.length > 0 && (
                 <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">

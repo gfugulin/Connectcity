@@ -2,10 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import RoutesPage from './pages/Routes';
 import RouteDetail from './pages/RouteDetail';
-import ActiveNavigation from './pages/ActiveNavigation';
 import Favorites from './pages/Favorites';
-import Profile from './pages/Profile';
-import FAQ from './pages/FAQ';
 
 function App() {
   return (
@@ -14,10 +11,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/route/:id" element={<RouteDetail />} />
-        <Route path="/navigation" element={<ActiveNavigation />} />
         <Route path="/favorites" element={<Favorites />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/faq" element={<FAQ />} />
       </Routes>
     </BrowserRouter>
   );

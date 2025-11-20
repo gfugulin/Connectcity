@@ -157,18 +157,37 @@ def _init_engine_with_fallback() -> Engine:
         logger.warning(f"⚠️ Falha ao carregar dados híbridos: {e}")
         logger.info("🔄 Tentando outras fontes de dados...")
     
-    # Tentativa 1: Dados integrados (prioridade - dados reais do mapa)
+    # Tentativa 1: Dados integrados de SP (prioridade - dados reais do mapa)
+    sp_integrated_nodes = os.path.join(DATA_DIR, "sp", "integrated", "integrated_nodes.csv")
+    sp_integrated_edges = os.path.join(DATA_DIR, "sp", "integrated", "integrated_edges.csv")
+    
+    if os.path.isfile(sp_integrated_nodes) and os.path.isfile(sp_integrated_edges):
+        # Verificar se os arquivos não estão vazios
+        if os.path.getsize(sp_integrated_nodes) > 100 and os.path.getsize(sp_integrated_edges) > 100:
+            try:
+                eng = Engine(sp_integrated_nodes, sp_integrated_edges, DEFAULT_WEIGHTS)
+                if eng.g and eng.g.contents.n > 0:
+                    logger.info(f"✅ Engine inicializado com dados integrados de SP (OSM+GTFS): {sp_integrated_nodes}")
+                    logger.info(f"   📊 Nós carregados: {eng.g.contents.n}")
+                    return eng
+            except Exception as e:
+                logger.warning(f"Falha ao carregar dados integrados de SP: {e}")
+    
+    # Tentativa 1b: Dados integrados genéricos (fallback)
     integrated_nodes = os.path.join(DATA_DIR, "integrated", "integrated_nodes.csv")
     integrated_edges = os.path.join(DATA_DIR, "integrated", "integrated_edges.csv")
     
     if os.path.isfile(integrated_nodes) and os.path.isfile(integrated_edges):
-        try:
-            eng = Engine(integrated_nodes, integrated_edges, DEFAULT_WEIGHTS)
-            if eng.g and eng.g.contents.n > 0:
-                logger.info(f"✅ Engine inicializado com dados integrados (OSM+GTFS): {integrated_nodes}")
-                return eng
-        except Exception as e:
-            logger.warning(f"Falha ao carregar dados integrados: {e}")
+        # Verificar se os arquivos não estão vazios
+        if os.path.getsize(integrated_nodes) > 100 and os.path.getsize(integrated_edges) > 100:
+            try:
+                eng = Engine(integrated_nodes, integrated_edges, DEFAULT_WEIGHTS)
+                if eng.g and eng.g.contents.n > 0:
+                    logger.info(f"✅ Engine inicializado com dados integrados (OSM+GTFS): {integrated_nodes}")
+                    logger.info(f"   📊 Nós carregados: {eng.g.contents.n}")
+                    return eng
+            except Exception as e:
+                logger.warning(f"Falha ao carregar dados integrados: {e}")
     
     # Tentativa 2: arquivos primários
     if os.path.isfile(NODES) and os.path.isfile(EDGES):
@@ -239,21 +258,43 @@ try:
                 logger.warning(f"⚠️ Falha ao carregar dados híbridos, tentando dados integrados: {e}")
                 hybrid_valid = False
         
-        # Prioridade 2: Dados integrados (se híbrido não disponível)
+        # Prioridade 2: Dados integrados de SP (se híbrido não disponível)
         if not hybrid_valid:
-            integrated_valid = (
-                os.path.isfile(integrated_nodes) and 
-                os.path.isfile(integrated_edges) and
-                os.path.getsize(integrated_nodes) > 0 and
-                os.path.getsize(integrated_edges) > 0
+            sp_integrated_nodes = os.path.join(DATA_DIR, "sp", "integrated", "integrated_nodes.csv")
+            sp_integrated_edges = os.path.join(DATA_DIR, "sp", "integrated", "integrated_edges.csv")
+            
+            sp_integrated_valid = (
+                os.path.isfile(sp_integrated_nodes) and 
+                os.path.isfile(sp_integrated_edges) and
+                os.path.getsize(sp_integrated_nodes) > 100 and
+                os.path.getsize(sp_integrated_edges) > 100
             )
             
-            if integrated_valid:
+            if sp_integrated_valid:
                 try:
-                    nodes_df, edges_df = load_graph_data(integrated_nodes, integrated_edges)
-                    logger.info("✅ Dados do grafo carregados para utilitários (dados integrados)")
+                    nodes_df, edges_df = load_graph_data(sp_integrated_nodes, sp_integrated_edges)
+                    logger.info("✅ Dados do grafo carregados para utilitários (dados integrados de SP)")
                 except Exception as e:
-                    logger.warning(f"⚠️ Falha ao carregar dados integrados, tentando arquivos primários: {e}")
+                    logger.warning(f"⚠️ Falha ao carregar dados integrados de SP, tentando dados integrados genéricos: {e}")
+                    sp_integrated_valid = False
+            
+            # Prioridade 2b: Dados integrados genéricos (fallback)
+            if not sp_integrated_valid:
+                integrated_valid = (
+                    os.path.isfile(integrated_nodes) and 
+                    os.path.isfile(integrated_edges) and
+                    os.path.getsize(integrated_nodes) > 100 and
+                    os.path.getsize(integrated_edges) > 100
+                )
+                
+                if integrated_valid:
+                    try:
+                        nodes_df, edges_df = load_graph_data(integrated_nodes, integrated_edges)
+                        logger.info("✅ Dados do grafo carregados para utilitários (dados integrados)")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Falha ao carregar dados integrados, tentando arquivos primários: {e}")
+                        integrated_valid = False
+                else:
                     integrated_valid = False
             
             # Prioridade 3: Arquivos primários

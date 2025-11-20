@@ -247,4 +247,3 @@ export OLHO_VIVO_TOKEN="seu_token_aqui"
 - `docs/VERIFICACAO_APIS.md` - Status das APIs
 - `docs/FLUXO_COMPLETO_DADOS.md` - Fluxo de dados do sistema
 
-

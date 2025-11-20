@@ -1,31 +1,34 @@
-2025-11-18 22:35:23 [BOOT] CSV paths -> NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
-2025-11-18 22:35:23 [BOOT] DATA_DIR=/app/data
-2025-11-18 22:35:23 [BOOT] NODES existe: True
-2025-11-18 22:35:23 [BOOT] EDGES existe: True
-2025-11-18 22:35:23 [BOOT] ⚠️ Diretório GTFS não encontrado. Caminhos testados: ['GTFS', '/app/GTFS', '/app/api/app/../../GTFS', '/app/api/app/../../../GTFS']
-2025-11-18 22:35:23 🔐 Tentando autenticar na API Olho Vivo
-2025-11-18 22:35:23    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
-2025-11-18 22:35:23    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
-2025-11-18 22:35:23    Token completo (últimos 10 chars): ...cb5d63be81
-2025-11-18 22:35:23    Tentando método 1: POST com token na query string
-2025-11-18 22:35:23    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
-2025-11-18 22:35:24    Status code: 200
-2025-11-18 22:35:24    Response text: false
-2025-11-18 22:35:24    Response headers: {'Date': 'Wed, 19 Nov 2025 01:35:24 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '5', 'Connection': 'keep-alive', 'CF-RAY': '9a0bf8823c9ead09-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
-2025-11-18 22:35:24    Response JSON: False (tipo: bool)
-2025-11-18 22:35:24 ❌ Falha na autenticação da API Olho Vivo
-2025-11-18 22:35:24    Resposta recebida: false
-2025-11-18 22:35:24    Status: 200
-2025-11-18 22:35:24    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95...
-2025-11-18 22:35:24    ⚠️ Verifique se o token está correto e ativo em: https://www.sptrans.com.br/desenvolvedores/
-2025-11-18 22:35:24 ⚠️ API Olho Vivo não disponível (autenticação falhou)
-2025-11-18 22:35:24 ⚠️ GTFS local não configurado (gtfs_dir=None)
-2025-11-18 22:35:24 📊 Status das fontes de dados: {'olho_vivo': False, 'gtfs_local': False}
-2025-11-18 22:35:24 Engine inicializado com CSV primário: NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
-2025-11-18 22:35:24 ✅ Engine inicializado com sucesso!
-2025-11-18 22:35:24 Dados do grafo carregados: 3 nós, 2 arestas
-2025-11-18 22:35:24 ✅ Dados do grafo carregados para utilitários (arquivos primários)
-2025-11-18 22:35:24 INFO:     Started server process [1]
-2025-11-18 22:35:24 INFO:     Waiting for application startup.
-2025-11-18 22:35:24 INFO:     Application startup complete.
-2025-11-18 22:35:24 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+2025-11-20 13:23:26 [BOOT] CSV paths -> NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
+2025-11-20 13:23:26 [BOOT] DATA_DIR=/app/data
+2025-11-20 13:23:26 [BOOT] NODES existe: True
+2025-11-20 13:23:26 [BOOT] EDGES existe: True
+2025-11-20 13:23:26 [BOOT] ⚠️ Diretório GTFS não encontrado. Caminhos testados: ['GTFS', '/app/GTFS', '/app/api/app/../../GTFS', '/app/api/app/../../../GTFS']
+2025-11-20 13:23:26 🔐 Tentando autenticar na API Olho Vivo
+2025-11-20 13:23:26    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
+2025-11-20 13:23:26    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
+2025-11-20 13:23:26    Token completo (últimos 10 chars): ...cb5d63be81
+2025-11-20 13:23:26    Token length: 64
+2025-11-20 13:23:26    Token repr: '1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81'
+2025-11-20 13:23:26    Tentando método 1: POST com token na query string
+2025-11-20 13:23:26    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
+2025-11-20 13:23:26    Headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/'}
+2025-11-20 13:23:26    Status code: 200
+2025-11-20 13:23:26    Response text: true
+2025-11-20 13:23:26    Response headers: {'Date': 'Thu, 20 Nov 2025 16:23:26 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '4', 'Connection': 'keep-alive', 'CF-RAY': '9a194ab56ce9a9e4-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'Set-Cookie': 'apiCredentials=155D2F227CE4B78F569E842836AD29AA935D6E4048786274CE3D09FD00B060F68213602E7E04197270DCF6D809799723C2044332C5D217AA3784517052066C68F9A2467E97B68C683C6B685AB277DA40E55914DFBBC2503A5FBCEA8A547B576F7F5634945D0B5FA70409DFCAEBC90112D2DC031BD597C45A4CD06A2DB993CE0F11E69EF64834C7915A41902F126456CCA62B1FB4BD94571F61F8CF851A17C0D93AF5BD45DC4DE8BA8239662F81B79EF8EB8107DB797EB4421C705ACD9B120ADD01D3331B; path=/; HttpOnly; SameSite=Lax', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
+2025-11-20 13:23:26    Request URL final: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
+2025-11-20 13:23:26    Request headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/', 'Content-Length': '0'}
+2025-11-20 13:23:26    Response JSON: True (tipo: bool)
+2025-11-20 13:23:26 ✅ Autenticação na API Olho Vivo bem-sucedida
+2025-11-20 13:23:26 ✅ API Olho Vivo disponível
+2025-11-20 13:23:26 ⚠️ GTFS local não configurado (gtfs_dir=None)
+2025-11-20 13:23:26 📊 Status das fontes de dados: {'olho_vivo': True, 'gtfs_local': False}
+2025-11-20 13:23:26 ⚠️ Falha ao carregar dados híbridos: GTFS local não disponível. É necessário para estrutura do grafo.
+2025-11-20 13:23:26 🔄 Tentando outras fontes de dados...
+2025-11-20 13:23:26 Engine inicializado com CSV primário: NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
+2025-11-20 13:23:26 ✅ Engine inicializado com sucesso!
+2025-11-20 13:23:26 Dados do grafo carregados: 3 nós, 2 arestas
+2025-11-20 13:23:26 ✅ Dados do grafo carregados para utilitários (arquivos primários)
+2025-11-20 13:23:26 INFO:     Started server process [1]
+2025-11-20 13:23:26 INFO:     Waiting for application startup.
+2025-11-20 13:23:26 INFO:     Application startup complete.
+2025-11-20 13:23:26 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)

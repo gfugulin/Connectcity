@@ -5,7 +5,6 @@ import { formatTime, calculateRouteScore, saveFavorite } from '../utils';
 import BottomNav from '../components/BottomNav';
 import StopInfo from '../components/StopInfo';
 import Map from '../components/Map';
-import ReportBarrier from '../components/ReportBarrier';
 
 export default function RouteDetail() {
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ export default function RouteDetail() {
   const [favoriteName, setFavoriteName] = useState('');
   const [showRealtime, setShowRealtime] = useState(false);
   const [paradasComPrevisao, setParadasComPrevisao] = useState([]);
-  const [showReportBarrier, setShowReportBarrier] = useState(false);
 
   useEffect(() => {
     const storedRoute = JSON.parse(sessionStorage.getItem('selectedRoute') || 'null');
@@ -294,42 +292,17 @@ export default function RouteDetail() {
       {/* Footer */}
       <footer className="fixed bottom-0 z-10 w-full bg-white shadow-[0_-1px_3px_rgba(0,0,0,0.1)]">
         <div className="flex gap-4 p-4">
-          <button
-            onClick={() => setShowReportBarrier(true)}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-200 transition-colors"
-          >
+          <button className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--secondary-color)] px-4 py-3 text-sm font-bold text-[var(--text-primary)]">
             <span className="material-symbols-outlined text-lg">report</span>
             <span className="truncate">Reportar Barreira</span>
           </button>
-          <button
-            onClick={() => {
-              // Salvar rota atual no sessionStorage para navegação ativa
-              sessionStorage.setItem('activeRoute', JSON.stringify({
-                route,
-                details,
-                currentStep: 0
-              }));
-              navigate('/navigation');
-            }}
-            className="flex-1 cursor-pointer rounded-lg bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 transition-colors"
-          >
+          <button className="flex-1 cursor-pointer rounded-lg bg-[var(--primary-color)] px-4 py-3 text-sm font-bold text-white">
             <span className="truncate">Iniciar Rota</span>
           </button>
         </div>
         <BottomNav />
         <div className="h-safe-area-bottom bg-white"></div>
       </footer>
-
-      {/* Modal Reportar Barreira */}
-      <ReportBarrier
-        isOpen={showReportBarrier}
-        onClose={() => setShowReportBarrier(false)}
-        onReport={(reporte) => {
-          console.log('Barreira reportada:', reporte);
-          // Aqui você salvaria o reporte no backend
-          alert('Barreira reportada com sucesso! Obrigado por ajudar outros usuários.');
-        }}
-      />
 
       {/* Popup de Favorito */}
       {showFavoritePopup && (

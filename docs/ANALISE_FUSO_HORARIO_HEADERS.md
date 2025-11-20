@@ -167,4 +167,3 @@ Verificar se o token está sendo passado corretamente:
 - [Documentação API Olho Vivo](https://www.sptrans.com.br/desenvolvedores/api-do-olho-vivo-guia-de-referencia/documentacao-api/)
 - [Área de Desenvolvedores](https://www.sptrans.com.br/desenvolvedores/)
 
-

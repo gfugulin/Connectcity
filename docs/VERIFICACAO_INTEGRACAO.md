@@ -304,4 +304,3 @@ curl http://localhost:8080/health
 - Configurar variáveis de ambiente para diferentes ambientes
 - Considerar usar tile server alternativo para produção
 
-

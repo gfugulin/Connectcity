@@ -1,215 +1,121 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getFavorites, deleteFavorite, formatTime, getFavoriteIcon } from '../utils';
 import BottomNav from '../components/BottomNav';
 
 export default function Favorites() {
   const navigate = useNavigate();
-  
-  // Dados mockados de favoritos
-  const [favorites] = useState([
-    {
-      id: 1,
-      name: 'Casa',
-      icon: 'home',
-      from: 'Av. Paulista, 1000',
-      to: 'R. Lavinia Fenton, 53',
-      transport: ['onibus', 'trem'], // Ícones de ônibus e trem
-      duration: '1h 15min'
-    },
-    {
-      id: 2,
-      name: 'Trabalho',
-      icon: 'work',
-      from: 'R. Lavinia Fenton, 53',
-      to: 'Av. Paulista, 1000',
-      transport: ['onibus', 'trem'], // Ícone de caminhada
-      duration: '45min'
-    },
-    {
-      id: 3,
-      name: 'Faculdade',
-      icon: 'school',
-      from: 'R. Lavinia Fenton, 53',
-      to: 'Universidade Presbiteriana Mackenzie',
-      transport: ['onibus'], // Ícone de ônibus
-      duration: '1h 30min'
-    }
-  ]);
+  const [favorites, setFavorites] = useState([]);
 
-  const [showMenu, setShowMenu] = useState(null);
-
-  const toggleMenu = (id) => {
-    setShowMenu(showMenu === id ? null : id);
-  };
-
-  // Fechar menu ao clicar fora
   useEffect(() => {
-    const handleClickOutside = () => {
-      if (showMenu) {
-        setShowMenu(null);
-      }
-    };
+    setFavorites(getFavorites());
+  }, []);
 
-    if (showMenu) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showMenu]);
-
-  const getTransportIcon = (type) => {
-    switch (type) {
-      case 'onibus':
-        return 'directions_bus';
-      case 'trem':
-        return 'train';
-      case 'metro':
-        return 'subway';
-      case 'caminhada':
-        return 'directions_walk';
-      default:
-        return 'directions_bus';
+  const handleDelete = (id) => {
+    if (window.confirm('Deseja remover este favorito?')) {
+      deleteFavorite(id);
+      setFavorites(getFavorites());
     }
   };
 
-  const handleCardClick = (favorite) => {
-    // Navegar para detalhes da rota ou buscar rota
-    navigate('/');
+  const handleViewRoute = (favorite) => {
+    if (favorite.route) {
+      sessionStorage.setItem('selectedRoute', JSON.stringify(favorite.route));
+      navigate(`/route/${favorite.route.id}`);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white pb-24">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="flex items-center p-4">
-          <button 
+    <div className="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
+      <div className="flex-1">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--c-border)] bg-[var(--c-background)] p-4">
+          <button
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full"
+            className="flex items-center justify-center text-[var(--c-text-primary)]"
           >
-            <span className="material-symbols-outlined text-2xl">arrow_back</span>
+            <span className="material-symbols-outlined">arrow_back</span>
           </button>
-          <h1 className="flex-1 text-center text-lg font-semibold text-gray-900 -mr-10">
+          <h1 className="flex-1 text-center text-lg font-bold text-[var(--c-text-primary)]">
             Favoritos
           </h1>
-        </div>
-      </header>
-
-      <main className="px-4 py-6">
-        {favorites.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16">
-            <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">
-              bookmark
-            </span>
-            <p className="text-gray-600 mb-4">Nenhum favorito salvo</p>
-            <button
-              onClick={() => navigate('/')}
-              className="text-primary-600 font-medium"
-            >
-              Buscar rotas
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {favorites.map((favorite) => (
-              <div
-                key={favorite.id}
-                className="bg-gray-50 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
-                onClick={() => handleCardClick(favorite)}
+          <div className="w-8"></div>
+        </header>
+        <main className="p-4">
+          {favorites.length === 0 ? (
+            <div className="p-4 text-center">
+              <span className="material-symbols-outlined text-6xl text-gray-300 mb-4 block">
+                bookmark
+              </span>
+              <p className="text-gray-600 mb-4">Nenhum favorito salvo</p>
+              <button
+                onClick={() => navigate('/')}
+                className="text-blue-500 underline"
               >
-                <div className="flex items-start gap-4">
-                  {/* Ícone circular */}
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-blue-600 text-2xl">
-                      {favorite.icon}
-                    </span>
-                  </div>
+                Buscar rotas
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {favorites.map((fav) => {
+                const route = fav.route || {};
+                const time = formatTime(route.tempo_total_min || 0);
+                const icon = getFavoriteIcon(fav.name);
 
-                  {/* Conteúdo */}
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-base font-bold text-gray-900 mb-1">
-                      {favorite.name}
-                    </h2>
-                    <p className="text-sm text-gray-600 mb-3">
-                      {favorite.from} → {favorite.to}
-                    </p>
-
-                    {/* Ícones de transporte e tempo */}
-                    <div className="flex items-center gap-3">
-                      {/* Ícones de transporte */}
-                      <div className="flex items-center gap-2">
-                        {favorite.transport.map((type, index) => (
-                          <span
-                            key={index}
-                            className="material-symbols-outlined text-gray-600 text-lg"
-                          >
-                            {getTransportIcon(type)}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Tempo */}
-                      <div className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-gray-600 text-lg">
-                          schedule
-                        </span>
-                        <span className="text-sm text-gray-600 font-medium">
-                          {favorite.duration}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Menu de três pontos */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleMenu(favorite.id);
-                    }}
-                    className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-200"
+                return (
+                  <div
+                    key={fav.id}
+                    onClick={() => handleViewRoute(fav)}
+                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-xl">
-                      more_vert
-                    </span>
-                  </button>
-
-                  {/* Menu dropdown */}
-                  {showMenu === favorite.id && (
-                    <div 
-                      className="absolute right-4 top-16 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 min-w-[150px]"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCardClick(favorite);
-                          setShowMenu(null);
-                        }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        Ver rota
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // handleDelete(favorite.id);
-                          setShowMenu(null);
-                        }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                      >
-                        Remover
-                      </button>
+                    <div className="flex items-center gap-4 p-4">
+                      <div className="flex items-center justify-center rounded-full bg-blue-100 text-[var(--primary-color)] shrink-0 size-12">
+                        <span className="material-symbols-outlined text-2xl">{icon}</span>
+                      </div>
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start">
+                          <h2 className="text-gray-800 text-lg font-semibold leading-tight">
+                            {fav.name}
+                          </h2>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(fav.id);
+                            }}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </div>
+                        <p className="text-gray-500 text-sm font-normal mt-1">
+                          {fav.from || route.from || 'Origem'} → {fav.to || route.to || 'Destino'}
+                        </p>
+                        <div className="flex items-center gap-4 mt-3 text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <span className="material-symbols-outlined text-lg">schedule</span>
+                            <span className="text-sm font-medium">{time}</span>
+                          </div>
+                          {route.transferencias && (
+                            <div className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-lg">swap_horiz</span>
+                              <span className="text-sm">
+                                {route.transferencias} transferência{route.transferencias !== 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        <BottomNav />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </main>
       </div>
+      <footer className="sticky bottom-0 border-t border-[var(--c-border)] bg-[var(--c-background)] px-4 pb-3 pt-2">
+        <BottomNav />
+      </footer>
     </div>
   );
 }
+
