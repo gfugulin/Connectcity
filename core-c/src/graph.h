@@ -25,7 +25,14 @@ typedef struct Edge {
 
 typedef struct Node { char id[16]; double lat, lon; Edge* adj; } Node;
 
-typedef struct Graph { Node* nodes; int n; } Graph;
+// Forward declaration
+typedef struct IdIndex IdIndex;
+
+typedef struct Graph { 
+  Node* nodes; 
+  int n; 
+  IdIndex* id_index;  // Índice hash para busca O(1) de IDs
+} Graph;
 
 typedef struct Route { int* path; int len; double custo; } Route;
 

@@ -166,6 +166,7 @@ export default function RouteDetail() {
             <div className="aspect-video w-full rounded-xl overflow-hidden shadow-md relative">
               <Map 
                 routePath={route?.path || []}
+                routeDetails={details}
                 showRealtime={showRealtime}
               />
             </div>

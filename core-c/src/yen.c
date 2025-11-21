@@ -11,6 +11,15 @@ typedef struct {
     int valid;
 } RouteCandidate;
 
+// Estrutura para rastrear arestas removidas temporariamente
+typedef struct RemovedEdge {
+    int from;
+    int to;
+    Edge* edge;  // Ponteiro para a aresta removida
+    Edge** prev_next;  // Ponteiro para o campo 'next' do elemento anterior
+    struct RemovedEdge* next;
+} RemovedEdge;
+
 // Função para comparar candidatos (heap mínimo)
 static int compare_candidates(const void* a, const void* b) {
     RouteCandidate* ca = (RouteCandidate*)a;
@@ -41,17 +50,42 @@ static Route copy_route(const Route* src) {
     return dst;
 }
 
-// Função para remover aresta temporariamente (modifica o grafo)
-static void remove_edge_temporarily(Graph* g, int from, int to) {
+// Função para remover aresta temporariamente (sem destruir, apenas desligar)
+static RemovedEdge* remove_edge_temporarily(Graph* g, int from, int to, RemovedEdge* removed_list) {
     Edge** e = &g->nodes[from].adj;
+    Edge* prev = NULL;
+    
     while (*e) {
         if ((*e)->to == to) {
-            Edge* temp = *e;
+            // Criar entrada na lista de arestas removidas
+            RemovedEdge* re = (RemovedEdge*)calloc(1, sizeof(RemovedEdge));
+            re->from = from;
+            re->to = to;
+            re->edge = *e;
+            re->prev_next = e;
+            re->next = removed_list;
+            
+            // Desligar aresta (mas não destruir)
             *e = (*e)->next;
-            free(temp);
-            break;
+            
+            return re;
         }
+        prev = *e;
         e = &(*e)->next;
+    }
+    
+    return removed_list;
+}
+
+// Função para restaurar todas as arestas removidas
+static void restore_removed_edges(RemovedEdge* removed_list) {
+    while (removed_list) {
+        // Restaurar aresta na lista de adjacência
+        *(removed_list->prev_next) = removed_list->edge;
+        
+        RemovedEdge* next = removed_list->next;
+        free(removed_list);
+        removed_list = next;
     }
 }
 
@@ -84,6 +118,7 @@ int k_shortest_yen(Graph* g, int s, int t, CostParams p, int k, Route* out) {
     // Para cada rota em A, gerar candidatos
     for (int i = 0; i < A_size && found_routes < k; i++) {
         Route* current_route = &A[i];
+        RemovedEdge* removed_edges = NULL;  // Lista de arestas removidas nesta iteração
         
         // Para cada aresta na rota atual
         for (int j = 0; j < current_route->len - 1; j++) {
@@ -106,7 +141,7 @@ int k_shortest_yen(Graph* g, int s, int t, CostParams p, int k, Route* out) {
                     memcmp(prev_route->path, current_route->path, (j + 1) * sizeof(int)) == 0) {
                     // Remover aresta spur_node -> next_node temporariamente
                     if (j + 1 < prev_route->len) {
-                        remove_edge_temporarily(g, spur_node, prev_route->path[j + 1]);
+                        removed_edges = remove_edge_temporarily(g, spur_node, prev_route->path[j + 1], removed_edges);
                     }
                 }
             }
@@ -150,8 +185,9 @@ int k_shortest_yen(Graph* g, int s, int t, CostParams p, int k, Route* out) {
                 }
             }
             
-            // Restaurar arestas removidas (simplificado)
-            // Em implementação real, manteríamos uma lista de arestas removidas
+            // Restaurar arestas removidas ANTES de continuar
+            restore_removed_edges(removed_edges);
+            removed_edges = NULL;
             
             free_route(&root_path);
             free_route(&spur_path);

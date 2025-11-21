@@ -245,12 +245,28 @@ const api = {
   }
 };
 
-// Verificar conexão ao carregar
-api.getHealth().then(health => {
-  console.log('✅ API conectada:', health);
-}).catch(() => {
-  console.warn('⚠️ API não disponível. Certifique-se de que o backend está rodando na porta 8080');
-});
+// Verificar conexão ao carregar (com retry)
+const checkApiHealth = async (retries = 3, delay = 2000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const health = await api.getHealth();
+      console.log('✅ API conectada:', health);
+      return;
+    } catch (error) {
+      if (i < retries - 1) {
+        console.log(`⏳ Tentativa ${i + 1}/${retries} - Aguardando servidor iniciar...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        console.warn('⚠️ API não disponível após', retries, 'tentativas. Certifique-se de que o backend está rodando na porta 8080');
+      }
+    }
+  }
+};
+
+// Aguardar um pouco antes de verificar (dar tempo para o servidor iniciar)
+setTimeout(() => {
+  checkApiHealth();
+}, 1000);
 
 export default api;
 

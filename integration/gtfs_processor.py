@@ -13,6 +13,8 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
+from .spatial_utils import create_walking_connections
+
 logger = logging.getLogger(__name__)
 
 @dataclass
@@ -272,10 +274,20 @@ class GTFSProcessor:
         else:
             return 'stop'
     
-    def convert_to_conneccity_format(self) -> Tuple[List[Dict], List[Dict]]:
+    def convert_to_conneccity_format(
+        self,
+        add_walking_connections: bool = True,
+        walking_max_distance_m: float = 500,
+        walking_max_connections: int = 10
+    ) -> Tuple[List[Dict], List[Dict]]:
         """
         Converte dados GTFS para formato Conneccity
         
+        Args:
+            add_walking_connections: Se True, adiciona conexões de caminhada entre paradas próximas
+            walking_max_distance_m: Distância máxima para criar conexão de caminhada (metros)
+            walking_max_connections: Máximo de conexões de caminhada por nó
+            
         Returns:
             Tupla com (nós, arestas) no formato Conneccity
         """
@@ -309,7 +321,18 @@ class GTFSProcessor:
             }
             edges.append(edge)
         
-        logger.info(f"Convertidos {len(nodes)} nós e {len(edges)} arestas")
+        # Adicionar conexões de caminhada entre paradas próximas
+        if add_walking_connections and len(nodes) > 0:
+            walking_edges = create_walking_connections(
+                nodes,
+                max_distance_m=walking_max_distance_m,
+                max_connections_per_node=walking_max_connections,
+                bidirectional=True  # Criar conexões bidirecionais para garantir conectividade
+            )
+            edges.extend(walking_edges)
+            logger.info(f"Adicionadas {len(walking_edges)} conexões de caminhada (bidirecionais)")
+        
+        logger.info(f"Convertidos {len(nodes)} nós e {len(edges)} arestas (incluindo caminhada)")
         return nodes, edges
     
     def _map_stop_type(self, stop_type: str) -> str:

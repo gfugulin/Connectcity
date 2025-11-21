@@ -21,16 +21,29 @@ export default function Home() {
   const handleSearch = async (e) => {
     e.preventDefault();
     
-    if (!from.trim() || !to.trim()) {
-      setError('Por favor, preencha origem e destino');
+    // Validar que usuário selecionou origem e destino da lista
+    // (como Google Maps: precisa selecionar da lista, não apenas digitar)
+    if (!fromNode || !toNode) {
+      if (!fromNode && !toNode) {
+        setError('Por favor, selecione origem e destino da lista de sugestões');
+      } else if (!fromNode) {
+        setError('Por favor, selecione a origem da lista de sugestões');
+      } else {
+        setError('Por favor, selecione o destino da lista de sugestões');
+      }
       return;
     }
+    
+    // Usar IDs dos nós selecionados para buscar rotas
+    // (o input mostra o nome, mas a busca usa o ID)
+    const fromId = fromNode.id;
+    const toId = toNode.id;
 
     setLoading(true);
     setError('');
 
     try {
-      const routes = await api.searchRoutes(from.trim(), to.trim(), profile);
+      const routes = await api.searchRoutes(fromId, toId, profile);
       
       if (routes.length === 0) {
         setError('Nenhuma rota encontrada entre os pontos selecionados');
@@ -39,7 +52,13 @@ export default function Home() {
 
       // Salvar rotas no sessionStorage
       sessionStorage.setItem('routes', JSON.stringify(routes));
-      sessionStorage.setItem('routeParams', JSON.stringify({ from, to, profile }));
+      sessionStorage.setItem('routeParams', JSON.stringify({ 
+        from: fromNode?.name || from, 
+        to: toNode?.name || to, 
+        fromId, 
+        toId, 
+        profile 
+      }));
       
       // Navegar para página de resultados
       navigate('/routes');
@@ -51,10 +70,19 @@ export default function Home() {
   };
 
   const handleInputChange = async (field, value) => {
+    // Atualizar valor do input (mostra o que o usuário digitou)
     if (field === 'from') {
       setFrom(value);
+      // Se usuário está digitando, limpar nó selecionado (força nova seleção)
+      if (value !== fromNode?.name) {
+        setFromNode(null);
+      }
     } else {
       setTo(value);
+      // Se usuário está digitando, limpar nó selecionado (força nova seleção)
+      if (value !== toNode?.name) {
+        setToNode(null);
+      }
     }
 
     // Autocomplete
@@ -81,13 +109,19 @@ export default function Home() {
   };
 
   const selectSuggestion = (field, node) => {
+    // Quando seleciona uma sugestão, mostra o nome completo no input
+    // e salva o nó completo (com ID) para usar na busca
+    const displayName = node.name || node.id;
+    
     if (field === 'from') {
-      setFrom(node.id);
-      setFromNode(node);
+      setFrom(displayName); // Input mostra o nome do lugar selecionado
+      setFromNode(node);    // Salva nó completo (com ID) para busca
     } else {
-      setTo(node.id);
-      setToNode(node);
+      setTo(displayName);   // Input mostra o nome do lugar selecionado
+      setToNode(node);      // Salva nó completo (com ID) para busca
     }
+    
+    // Fechar sugestões
     setShowSuggestions(prev => ({
       ...prev,
       [field]: false
@@ -180,7 +214,7 @@ export default function Home() {
                 onFocus={() => setShowSuggestions(prev => ({ ...prev, from: suggestions.from.length > 0 }))}
                 onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, from: false })), 200)}
                 className="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base"
-                placeholder="Digite origem (ex: node1)"
+                placeholder="Digite origem (ex: Cidade Jardim)"
               />
               {showSuggestions.from && suggestions.from.length > 0 && (
                 <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -214,7 +248,7 @@ export default function Home() {
                 onFocus={() => setShowSuggestions(prev => ({ ...prev, to: suggestions.to.length > 0 }))}
                 onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, to: false })), 200)}
                 className="form-input w-full pl-10 pr-4 py-3 border-gray-300 rounded-xl bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-base"
-                placeholder="Digite destino (ex: node2)"
+                placeholder="Digite destino (ex: Cidade Universitária)"
               />
               {showSuggestions.to && suggestions.to.length > 0 && (
                 <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">

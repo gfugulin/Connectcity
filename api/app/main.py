@@ -17,7 +17,7 @@ from .cache import route_cache, alternatives_cache, edge_analysis_cache, cached_
 from .performance import metrics, measure_performance, get_performance_recommendations
 from .route_utils import (
     load_graph_data, calculate_transfers, get_path_segments,
-    identify_avoided_barriers, get_route_details, get_edge_info
+    identify_avoided_barriers, get_route_details as build_route_details, get_edge_info
 )
 from .real_data_api import real_data_router
 from .sp_data_api import sp_data_router
@@ -125,7 +125,9 @@ def _init_engine_with_fallback() -> Engine:
         
         hybrid_processor = HybridDataProcessor(
             olho_vivo_token=OLHO_VIVO_TOKEN,
-            gtfs_dir=GTFS_LOCAL_DIR  # Já validado acima
+            gtfs_dir=GTFS_LOCAL_DIR,  # Já validado acima
+            enable_walking_connections=True,  # Habilitar conexões de caminhada
+            walking_max_distance_m=1000  # 1000m (1km) máximo para caminhada - aumentado para melhor conectividade
         )
         
         status = hybrid_processor.initialize()
@@ -437,35 +439,158 @@ async def get_route(request: RouteRequest):
 @app.post("/alternatives")
 async def get_alternatives(request: RouteRequest):
     """Calcular k rotas alternativas"""
+    logger.info(f"[ALTERNATIVES] Requisição recebida: from={request.from_id}, to={request.to_id}, perfil={request.perfil}, k={request.k}")
+    
     if not engine:
+        logger.error("[ALTERNATIVES] Engine não inicializado")
         raise HTTPException(status_code=503, detail="Engine não inicializado")
     
     try:
+        # Declarar variável global no início da função
+        global nodes_df, edges_df
+        
         # Validar perfil
         if request.perfil not in DEFAULT_WEIGHTS:
             raise InvalidProfileException(f"Perfil inválido: {request.perfil}")
         
-        # Obter índices dos nós
+        # Obter índices dos nós (tentar por ID primeiro, depois por nome)
         s = engine.idx(request.from_id)
         t = engine.idx(request.to_id)
         
+        # Logging detalhado para diagnóstico
+        logger.info(f"[ALTERNATIVES] Buscando nós: from_id='{request.from_id}' -> índice={s}, to_id='{request.to_id}' -> índice={t}")
+        
+        # Verificar se os índices correspondem aos IDs corretos
+        if s >= 0:
+            actual_from_id = engine.node_id(s)
+            logger.info(f"[ALTERNATIVES] Índice {s} corresponde ao ID: '{actual_from_id}' (esperado: '{request.from_id}')")
+            if actual_from_id != request.from_id:
+                logger.warning(f"[ALTERNATIVES] ⚠️ ID não corresponde! Esperado '{request.from_id}', encontrado '{actual_from_id}'")
+        
+        if t >= 0:
+            actual_to_id = engine.node_id(t)
+            logger.info(f"[ALTERNATIVES] Índice {t} corresponde ao ID: '{actual_to_id}' (esperado: '{request.to_id}')")
+            if actual_to_id != request.to_id:
+                logger.warning(f"[ALTERNATIVES] ⚠️ ID não corresponde! Esperado '{request.to_id}', encontrado '{actual_to_id}'")
+        
+        # Se não encontrou por ID, tentar buscar por nome
         if s == -1:
+            if nodes_df is None:
+                try:
+                    hybrid_nodes = os.path.join(DATA_DIR, "hybrid", "nodes.csv")
+                    if os.path.isfile(hybrid_nodes):
+                        nodes_df, _ = load_graph_data(hybrid_nodes, os.path.join(DATA_DIR, "hybrid", "edges.csv"))
+                except:
+                    pass
+            
+            if nodes_df is not None:
+                # Buscar por nome
+                nodes_df['name'] = nodes_df['name'].astype(str).fillna('')
+                match = nodes_df[nodes_df['name'].str.lower() == request.from_id.lower()]
+                if len(match) > 0:
+                    node_id = str(match.iloc[0]['id'])
+                    s = engine.idx(node_id)
+                    logger.info(f"[ALTERNATIVES] Nó origem encontrado por nome '{request.from_id}' -> ID: {node_id}")
+        
+        if t == -1:
+            if nodes_df is None:
+                try:
+                    hybrid_nodes = os.path.join(DATA_DIR, "hybrid", "nodes.csv")
+                    if os.path.isfile(hybrid_nodes):
+                        nodes_df, _ = load_graph_data(hybrid_nodes, os.path.join(DATA_DIR, "hybrid", "edges.csv"))
+                except:
+                    pass
+            
+            if nodes_df is not None:
+                # Buscar por nome
+                nodes_df['name'] = nodes_df['name'].astype(str).fillna('')
+                match = nodes_df[nodes_df['name'].str.lower() == request.to_id.lower()]
+                if len(match) > 0:
+                    node_id = str(match.iloc[0]['id'])
+                    t = engine.idx(node_id)
+                    logger.info(f"[ALTERNATIVES] Nó destino encontrado por nome '{request.to_id}' -> ID: {node_id}")
+        
+        logger.info(f"[ALTERNATIVES] Índices encontrados: origem={s}, destino={t}")
+        
+        if s == -1:
+            logger.error(f"[ALTERNATIVES] Nó origem '{request.from_id}' não encontrado no engine (nem por ID nem por nome)")
             raise NodeNotFoundException(f"Nó origem não encontrado: {request.from_id}")
         if t == -1:
+            logger.error(f"[ALTERNATIVES] Nó destino '{request.to_id}' não encontrado no engine (nem por ID nem por nome)")
             raise NodeNotFoundException(f"Nó destino não encontrado: {request.to_id}")
         
         # Calcular alternativas
         params = engine._params(request.perfil, request.chuva)
+        logger.info(f"[ALTERNATIVES] Calculando {request.k} rotas alternativas...")
+        logger.info(f"[ALTERNATIVES] Parâmetros: alpha={params.alpha}, beta={params.beta}, gamma={params.gamma}, delta={params.delta}")
+        
+        import time
+        start_time = time.time()
         alternatives = engine.k_alternatives(s, t, params, request.k)
+        elapsed_time = time.time() - start_time
+        
+        logger.info(f"[ALTERNATIVES] Algoritmo executado em {elapsed_time:.3f}s")
+        logger.info(f"[ALTERNATIVES] Algoritmo retornou {len(alternatives) if alternatives else 0} rotas")
         
         if not alternatives:
+            # Tentar buscar apenas a primeira rota (Dijkstra simples) para diagnóstico
+            logger.warning(f"[ALTERNATIVES] Tentando Dijkstra simples para diagnóstico...")
+            try:
+                path, cost = engine.best(s, t, params)
+                if path:
+                    logger.info(f"[ALTERNATIVES] ✅ Dijkstra simples encontrou rota com {len(path)} nós, custo: {cost:.2f}")
+                    logger.info(f"[ALTERNATIVES] Caminho: {' -> '.join([engine.node_id(idx) for idx in path[:10]])}{'...' if len(path) > 10 else ''}")
+                else:
+                    logger.warning(f"[ALTERNATIVES] ❌ Dijkstra simples também não encontrou rota")
+                    # Verificar conectividade básica
+                    logger.info(f"[ALTERNATIVES] Verificando conectividade do nó origem (índice {s})...")
+                    # Tentar encontrar qualquer caminho a partir do nó origem
+                    test_paths = 0
+                    test_nodes = []
+                    for test_idx in range(min(20, engine.g.contents.n)):
+                        if test_idx != s and test_idx != t:
+                            try:
+                                test_path, _ = engine.best(s, test_idx, params)
+                                if test_path:
+                                    test_paths += 1
+                                    test_nodes.append(engine.node_id(test_idx))
+                                    if len(test_nodes) >= 3:  # Limitar a 3 para não poluir log
+                                        break
+                            except:
+                                pass
+                    logger.info(f"[ALTERNATIVES] Nó origem consegue alcançar {test_paths}/20 nós de teste")
+                    if test_nodes:
+                        logger.info(f"[ALTERNATIVES] Exemplos de nós alcançáveis: {', '.join(test_nodes[:3])}")
+                    else:
+                        logger.error(f"[ALTERNATIVES] ❌ Nó origem NÃO consegue alcançar NENHUM outro nó! Grafo pode estar desconectado ou arestas não foram carregadas.")
+            except Exception as e:
+                logger.error(f"[ALTERNATIVES] Erro ao executar Dijkstra simples: {e}")
+                import traceback
+                logger.error(traceback.format_exc())
+        
+        if not alternatives:
+            logger.warning(f"[ALTERNATIVES] Nenhuma rota encontrada entre nós {s} e {t} (IDs: {request.from_id} -> {request.to_id})")
             raise RouteNotFoundException(request.from_id, request.to_id)
         
         # Carregar dados do grafo se necessário (usar variáveis globais)
-        global nodes_df, edges_df
+        # Nota: global já declarado no início da função (linha 450)
         if nodes_df is None or edges_df is None:
             try:
-                nodes_df, edges_df = load_graph_data(NODES, EDGES)
+                # Tentar carregar dados híbridos primeiro
+                hybrid_nodes = os.path.join(DATA_DIR, "hybrid", "nodes.csv")
+                hybrid_edges = os.path.join(DATA_DIR, "hybrid", "edges.csv")
+                
+                if os.path.isfile(hybrid_nodes) and os.path.isfile(hybrid_edges):
+                    nodes_df, edges_df = load_graph_data(hybrid_nodes, hybrid_edges)
+                else:
+                    # Fallback para dados integrados de SP
+                    sp_integrated_nodes = os.path.join(DATA_DIR, "sp", "integrated", "integrated_nodes.csv")
+                    sp_integrated_edges = os.path.join(DATA_DIR, "sp", "integrated", "integrated_edges.csv")
+                    
+                    if os.path.isfile(sp_integrated_nodes) and os.path.isfile(sp_integrated_edges):
+                        nodes_df, edges_df = load_graph_data(sp_integrated_nodes, sp_integrated_edges)
+                    else:
+                        nodes_df, edges_df = load_graph_data(NODES, EDGES)
             except Exception as e:
                 logger.warning(f"Não foi possível carregar dados do grafo: {e}")
                 nodes_df, edges_df = None, None
@@ -492,6 +617,8 @@ async def get_alternatives(request: RouteRequest):
             )
             alt_list.append(alt)
         
+        logger.info(f"[ALTERNATIVES] {len(alt_list)} rotas alternativas calculadas")
+        
         return AlternativesResponse(
             alternatives=alt_list,
             from_id=request.from_id,
@@ -499,9 +626,12 @@ async def get_alternatives(request: RouteRequest):
             profile=request.perfil,
             rain=request.chuva
         )
-    except ConneccityException:
+    except ConneccityException as e:
+        logger.error(f"[ALTERNATIVES] Erro Conneccity: {str(e)}")
         raise
     except Exception as e:
+        logger.error(f"[ALTERNATIVES] Erro interno: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
 # Endpoint de perfis
@@ -566,6 +696,18 @@ async def search_nodes(q: str = Query(..., min_length=1, description="Termo de b
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"Erro ao carregar nós: {str(e)}")
         
+        # Garantir que as colunas 'name' e 'id' sejam strings
+        # Converter NaN para string vazia antes de usar .str accessor
+        nodes_df = nodes_df.copy()
+        nodes_df['name'] = nodes_df['name'].astype(str).fillna('')
+        nodes_df['id'] = nodes_df['id'].astype(str).fillna('')
+        
+        # Garantir que as colunas 'name' e 'id' sejam strings
+        # Converter NaN para string vazia antes de usar .str accessor
+        nodes_df = nodes_df.copy()
+        nodes_df['name'] = nodes_df['name'].astype(str).fillna('')
+        nodes_df['id'] = nodes_df['id'].astype(str).fillna('')
+        
         # Buscar nós que correspondem à query (case-insensitive)
         query_lower = q.lower()
         matches = nodes_df[
@@ -581,10 +723,10 @@ async def search_nodes(q: str = Query(..., min_length=1, description="Termo de b
         for _, row in matches.iterrows():
             nodes_list.append({
                 "id": str(row['id']),
-                "name": str(row['name']),
-                "lat": float(row['lat']),
-                "lon": float(row['lon']),
-                "tipo": str(row['tipo'])
+                "name": str(row['name']) if pd.notna(row['name']) else str(row['id']),
+                "lat": float(row['lat']) if pd.notna(row['lat']) else 0.0,
+                "lon": float(row['lon']) if pd.notna(row['lon']) else 0.0,
+                "tipo": str(row['tipo']) if pd.notna(row['tipo']) else 'onibus'
             })
         
         return {
@@ -645,8 +787,8 @@ async def get_route_details(request: RouteDetailsRequest):
                 if edge_info:
                     cost += edge_info['tempo_min']
         
-        # Obter detalhes completos
-        details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
+        # Obter detalhes completos (usa utilitário de route_utils, não o próprio endpoint)
+        details = build_route_details(path, cost, edges_df, nodes_df, request.perfil)
         
         return {
             "path": path,

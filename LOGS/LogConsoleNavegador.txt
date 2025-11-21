@@ -1,19 +1,36 @@
-api.js:28 
- POST http://localhost:8080/alternatives 404 (Not Found)
-searchRoutes	@	api.js:28
-handleSearch	@	Home.jsx:29
-
-api.js:37 Erro ao buscar rotas: 
-AxiosError {message: 'Request failed with status code 404', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
+api.js:142 Erro ao obter detalhes da rota: 
+AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+getRouteDetails	@	api.js:142
+await in getRouteDetails		
+fetchDetails	@	RouteDetail.jsx:34
+(anônimo)	@	RouteDetail.jsx:46
+RouteDetail.jsx:40 Erro ao buscar detalhes: 
+AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+fetchDetails	@	RouteDetail.jsx:40
+await in fetchDetails		
+(anônimo)	@	RouteDetail.jsx:46
+api.js:139 
+ POST http://localhost:8080/route/details 500 (Internal Server Error)
+getRouteDetails	@	api.js:139
+fetchDetails	@	RouteDetail.jsx:34
+(anônimo)	@	RouteDetail.jsx:46
+api.js:142 Erro ao obter detalhes da rota: 
+AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+getRouteDetails	@	api.js:142
+await in getRouteDetails		
+fetchDetails	@	RouteDetail.jsx:34
+(anônimo)	@	RouteDetail.jsx:46
+RouteDetail.jsx:40 Erro ao buscar detalhes: 
+AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
 code
 : 
-"ERR_BAD_REQUEST"
+"ERR_BAD_RESPONSE"
 config
 : 
 {transitional: {…}, adapter: Array(3), transformRequest: Array(1), transformResponse: Array(1), timeout: 0, …}
 message
 : 
-"Request failed with status code 404"
+"Request failed with status code 500"
 name
 : 
 "AxiosError"
@@ -22,13 +39,16 @@ request
 XMLHttpRequest {onreadystatechange: null, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}
 response
 : 
-{data: {…}, status: 404, statusText: 'Not Found', headers: AxiosHeaders, config: {…}, …}
+{data: {…}, status: 500, statusText: 'Internal Server Error', headers: AxiosHeaders, config: {…}, …}
 status
 : 
-404
+500
 stack
 : 
-"AxiosError: Request failed with status code 404\n    at settle (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:1257:12)\n    at XMLHttpRequest.onloadend (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:1606:7)\n    at Axios.request (http://localhost:5173/node_modules/.vite/deps/axios.js?v=3fd61cb2:2223:41)\n    at async Object.searchRoutes (http://localhost:5173/src/services/api.js:28:19)\n    at async handleSearch (http://localhost:5173/src/pages/Home.jsx:42:22)"
+"AxiosError: Request failed with status code 500\n    at settle (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:1257:12)\n    at XMLHttpRequest.onloadend (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:1606:7)\n    at Axios.request (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:2223:41)\n    at async Object.getRouteDetails (http://localhost:5173/src/services/api.js:139:19)\n    at async fetchDetails (http://localhost:5173/src/pages/RouteDetail.jsx:46:30)"
 [[Prototype]]
 : 
 Error
+fetchDetails	@	RouteDetail.jsx:40
+await in fetchDetails		
+(anônimo)	@	RouteDetail.jsx:46

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet';
+import { useEffect, useState, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import api from '../services/api';
@@ -21,11 +21,15 @@ if (typeof window !== 'undefined') {
 }
 
 // Componente para ajustar o mapa quando os marcadores mudam
-function MapBounds({ fromNode, toNode }) {
+function MapBounds({ fromNode, toNode, routeCoordinates }) {
   const map = useMap();
 
   useEffect(() => {
-    if (fromNode && toNode) {
+    // Se houver coordenadas da rota, ajustar para mostrar toda a rota
+    if (routeCoordinates && routeCoordinates.length > 0) {
+      const bounds = L.latLngBounds(routeCoordinates);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    } else if (fromNode && toNode) {
       const bounds = L.latLngBounds([
         [fromNode.lat, fromNode.lon],
         [toNode.lat, toNode.lon]
@@ -36,12 +40,12 @@ function MapBounds({ fromNode, toNode }) {
     } else if (toNode) {
       map.setView([toNode.lat, toNode.lon], 15);
     }
-  }, [fromNode, toNode, map]);
+  }, [fromNode, toNode, routeCoordinates, map]);
 
   return null;
 }
 
-export default function Map({ fromNode, toNode, routePath = null, showRealtime = false, codigoLinha = null }) {
+export default function Map({ fromNode, toNode, routePath = null, routeDetails = null, showRealtime = false, codigoLinha = null }) {
   // Coordenadas padrão (São Paulo)
   const defaultCenter = [-23.5505, -46.6333];
   const defaultZoom = 12;
@@ -50,6 +54,8 @@ export default function Map({ fromNode, toNode, routePath = null, showRealtime =
   const [veiculos, setVeiculos] = useState([]);
   const [previsoes, setPrevisoes] = useState([]);
   const [loadingRealtime, setLoadingRealtime] = useState(false);
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [routeSegments, setRouteSegments] = useState([]);
 
   // Criar ícones customizados (usando SVG inline para cores diferentes)
   const originIcon = new L.DivIcon({
@@ -128,6 +134,116 @@ export default function Map({ fromNode, toNode, routePath = null, showRealtime =
     return () => clearInterval(interval);
   }, [showRealtime, codigoLinha]);
 
+  // Buscar coordenadas da rota quando routePath ou routeDetails mudarem
+  useEffect(() => {
+    if (!routePath || routePath.length === 0) {
+      setRouteCoordinates([]);
+      setRouteSegments([]);
+      return;
+    }
+
+    // Se routeDetails estiver disponível, usar coordenadas dos steps
+    if (routeDetails && routeDetails.steps) {
+      const coordinates = [];
+      const segments = [];
+      
+      routeDetails.steps.forEach(step => {
+        if (step.segments && step.segments.length > 0) {
+          // Agrupar segmentos por modo de transporte
+          const segmentCoords = [];
+          step.segments.forEach(segment => {
+            if (segment.from_lat && segment.from_lon) {
+              segmentCoords.push([segment.from_lat, segment.from_lon]);
+            }
+            if (segment.to_lat && segment.to_lon) {
+              segmentCoords.push([segment.to_lat, segment.to_lon]);
+            }
+          });
+          
+          if (segmentCoords.length > 0) {
+            segments.push({
+              coordinates: segmentCoords,
+              mode: step.mode || 'pe',
+              color: getModeColor(step.mode || 'pe')
+            });
+            coordinates.push(...segmentCoords);
+          }
+        } else if (step.from_lat && step.from_lon && step.to_lat && step.to_lon) {
+          // Fallback: usar coordenadas diretas do step
+          const stepCoords = [
+            [step.from_lat, step.from_lon],
+            [step.to_lat, step.to_lon]
+          ];
+          segments.push({
+            coordinates: stepCoords,
+            mode: step.mode || 'pe',
+            color: getModeColor(step.mode || 'pe')
+          });
+          coordinates.push(...stepCoords);
+        }
+      });
+      
+      // Remover duplicatas consecutivas
+      const uniqueCoords = coordinates.filter((coord, index) => {
+        if (index === 0) return true;
+        const prev = coordinates[index - 1];
+        return coord[0] !== prev[0] || coord[1] !== prev[1];
+      });
+      
+      setRouteCoordinates(uniqueCoords);
+      setRouteSegments(segments);
+    } else {
+      // Fallback: buscar coordenadas dos nós via API
+      const fetchCoordinates = async () => {
+        try {
+          const coords = [];
+          for (const nodeId of routePath) {
+            try {
+              const nodes = await api.searchNodes(nodeId);
+              if (nodes && nodes.length > 0) {
+                const node = nodes[0];
+                if (node.lat && node.lon) {
+                  coords.push([node.lat, node.lon]);
+                }
+              }
+            } catch (error) {
+              console.warn(`Erro ao buscar coordenadas do nó ${nodeId}:`, error);
+            }
+          }
+          setRouteCoordinates(coords);
+          // Criar segmento único com cor padrão
+          if (coords.length > 0) {
+            setRouteSegments([{
+              coordinates: coords,
+              mode: 'pe',
+              color: getModeColor('pe')
+            }]);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar coordenadas da rota:', error);
+        }
+      };
+      
+      fetchCoordinates();
+    }
+  }, [routePath, routeDetails]);
+
+  // Função para obter cor baseada no modo de transporte
+  const getModeColor = (mode) => {
+    const modeColors = {
+      'onibus': '#FF6600',      // Laranja
+      'bus': '#FF6600',
+      'metro': '#0066CC',       // Azul
+      'subway': '#0066CC',
+      'trem': '#CC0066',        // Roxo
+      'train': '#CC0066',
+      'pe': '#00CC66',          // Verde
+      'walk': '#00CC66',
+      'default': '#0d80f2'      // Azul padrão
+    };
+    return modeColors[mode?.toLowerCase()] || modeColors['default'];
+  };
+
   // Buscar previsões de chegada se houver paradas na rota
   useEffect(() => {
     if (!showRealtime || !routePath || routePath.length === 0) {
@@ -151,7 +267,64 @@ export default function Map({ fromNode, toNode, routePath = null, showRealtime =
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      <MapBounds fromNode={fromNode} toNode={toNode} />
+      <MapBounds fromNode={fromNode} toNode={toNode} routeCoordinates={routeCoordinates} />
+
+      {/* Desenhar rota no mapa */}
+      {routeSegments.length > 0 && routeSegments.map((segment, index) => (
+        <Polyline
+          key={`route-segment-${index}`}
+          positions={segment.coordinates}
+          color={segment.color}
+          weight={5}
+          opacity={0.7}
+          smoothFactor={1}
+        />
+      ))}
+      
+      {/* Desenhar rota única se não houver segmentos (fallback) */}
+      {routeSegments.length === 0 && routeCoordinates.length > 0 && (
+        <Polyline
+          positions={routeCoordinates}
+          color="#0d80f2"
+          weight={5}
+          opacity={0.7}
+          smoothFactor={1}
+        />
+      )}
+
+      {/* Marcadores intermediários para paradas importantes */}
+      {routeDetails && routeDetails.steps && routeDetails.steps.map((step, index) => {
+        // Mostrar marcador apenas para paradas de transporte público
+        if (step.mode && step.mode !== 'pe' && step.mode !== 'walk' && step.to_lat && step.to_lon) {
+          return (
+            <CircleMarker
+              key={`stop-${index}`}
+              center={[step.to_lat, step.to_lon]}
+              radius={6}
+              fillColor={getModeColor(step.mode)}
+              color="#ffffff"
+              weight={2}
+              opacity={1}
+              fillOpacity={0.8}
+            >
+              <Popup>
+                <div>
+                  <strong>{step.to_name || step.to}</strong>
+                  <br />
+                  <small>Modo: {step.mode}</small>
+                  {step.time_min > 0 && (
+                    <>
+                      <br />
+                      <small>Tempo: {Math.round(step.time_min)} min</small>
+                    </>
+                  )}
+                </div>
+              </Popup>
+            </CircleMarker>
+          );
+        }
+        return null;
+      })}
 
       {fromNode && (
         <Marker position={[fromNode.lat, fromNode.lon]} icon={originIcon}>

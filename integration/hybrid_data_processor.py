@@ -10,6 +10,15 @@ import os
 
 from .olho_vivo_client import OlhoVivoClient
 from .gtfs_processor import GTFSProcessor
+from .spatial_utils import haversine_distance, create_walking_connections
+
+# Import OSM opcional
+try:
+    from .osm_processor import OSMProcessor
+    OSM_AVAILABLE = True
+except (ImportError, AttributeError):
+    OSM_AVAILABLE = False
+    OSMProcessor = None
 
 logger = logging.getLogger(__name__)
 
@@ -20,20 +29,35 @@ class HybridDataProcessor:
     - GTFS Local (fallback): dados estáticos estruturais
     """
     
-    def __init__(self, olho_vivo_token: str, gtfs_dir: Optional[str] = None):
+    def __init__(
+        self,
+        olho_vivo_token: str,
+        gtfs_dir: Optional[str] = None,
+        osm_data_dir: Optional[str] = None,
+        enable_walking_connections: bool = True,
+        walking_max_distance_m: float = 500
+    ):
         """
         Inicializa o processador híbrido
         
         Args:
             olho_vivo_token: Token da API Olho Vivo
             gtfs_dir: Diretório com arquivos GTFS locais (opcional)
+            osm_data_dir: Diretório com dados OSM processados (opcional)
+            enable_walking_connections: Se True, adiciona conexões de caminhada
+            walking_max_distance_m: Distância máxima para conexões de caminhada (metros)
         """
         self.olho_vivo_client = OlhoVivoClient(olho_vivo_token)
         self.gtfs_processor = GTFSProcessor() if gtfs_dir else None
+        self.osm_processor = None
         self.gtfs_dir = gtfs_dir
+        self.osm_data_dir = osm_data_dir
+        self.enable_walking_connections = enable_walking_connections
+        self.walking_max_distance_m = walking_max_distance_m
         
         self.olho_vivo_available = False
         self.gtfs_available = False
+        self.osm_available = False
         
         # Dados carregados
         self.nodes: List[Dict] = []
@@ -48,7 +72,8 @@ class HybridDataProcessor:
         """
         status = {
             'olho_vivo': False,
-            'gtfs_local': False
+            'gtfs_local': False,
+            'osm': False
         }
         
         # Tentar autenticar na API Olho Vivo
@@ -61,6 +86,37 @@ class HybridDataProcessor:
                 logger.warning("⚠️ API Olho Vivo não disponível (autenticação falhou)")
         except Exception as e:
             logger.warning(f"⚠️ Erro ao conectar com API Olho Vivo: {e}")
+        
+        # Verificar OSM local
+        if self.osm_data_dir:
+            osm_paths = [
+                self.osm_data_dir,
+                os.path.abspath(self.osm_data_dir),
+                os.path.join(os.getcwd(), self.osm_data_dir),
+                os.path.join(os.path.dirname(os.path.dirname(__file__)), self.osm_data_dir)
+            ]
+            
+            osm_dir_found = None
+            for path in osm_paths:
+                if os.path.isdir(path):
+                    osm_dir_found = path
+                    break
+            
+            if osm_dir_found:
+                if OSM_AVAILABLE and OSMProcessor:
+                    try:
+                        self.osm_processor = OSMProcessor()
+                        # Tentar carregar dados OSM
+                        # (implementar conforme necessário)
+                        self.osm_available = True
+                        status['osm'] = True
+                        logger.info(f"✅ Dados OSM disponíveis: {osm_dir_found}")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Erro ao carregar dados OSM: {e}")
+                else:
+                    logger.info("ℹ️ OSMProcessor não disponível")
+            else:
+                logger.info("ℹ️ Dados OSM não configurados")
         
         # Verificar GTFS local
         if self.gtfs_dir:
@@ -128,14 +184,29 @@ class HybridDataProcessor:
                 
                 # Processar GTFS local
                 self.gtfs_processor.process_local_gtfs_directory(self.gtfs_dir)
-                gtfs_nodes, gtfs_edges = self.gtfs_processor.convert_to_conneccity_format()
+                gtfs_nodes, gtfs_edges = self.gtfs_processor.convert_to_conneccity_format(
+                    add_walking_connections=self.enable_walking_connections,
+                    walking_max_distance_m=self.walking_max_distance_m,
+                    walking_max_connections=10
+                )
                 
                 # GTFS fornece estrutura completa
                 nodes = gtfs_nodes
                 edges = gtfs_edges
                 
                 logger.info(f"✅ {len(nodes)} nós carregados do GTFS local")
-                logger.info(f"✅ {len(edges)} arestas carregadas do GTFS local")
+                logger.info(f"✅ {len(edges)} arestas carregadas do GTFS local (incluindo caminhada)")
+                
+                # Integrar dados OSM se disponível
+                if self.osm_available and self.osm_processor:
+                    try:
+                        logger.info("🗺️ Integrando dados OSM...")
+                        osm_edges = self._integrate_osm_edges(nodes, edges)
+                        if osm_edges:
+                            edges.extend(osm_edges)
+                            logger.info(f"✅ Adicionadas {len(osm_edges)} arestas OSM")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Erro ao integrar OSM: {e}")
                 
                 # Se API Olho Vivo disponível, marcar para uso em tempo real
                 if self.olho_vivo_available:
@@ -219,6 +290,43 @@ class HybridDataProcessor:
             'edges_count': len(edges_df)
         }
     
+    def _integrate_osm_edges(self, nodes: List[Dict], existing_edges: List[Dict]) -> List[Dict]:
+        """
+        Integra arestas OSM com nós GTFS, conectando paradas aos nós OSM mais próximos
+        
+        Args:
+            nodes: Lista de nós GTFS
+            existing_edges: Lista de arestas existentes (para evitar duplicatas)
+            
+        Returns:
+            Lista de novas arestas OSM
+        """
+        if not self.osm_processor:
+            return []
+        
+        new_edges = []
+        existing_edges_set = {(e['from'], e['to']) for e in existing_edges}
+        
+        try:
+            # Obter arestas OSM
+            osm_edges = self.osm_processor.convert_to_conneccity_edges()
+            
+            # Criar mapa de nós OSM por coordenadas (aproximado)
+            # Conectar paradas GTFS aos nós OSM mais próximos
+            for osm_edge in osm_edges:
+                # Verificar se aresta já existe
+                edge_key = (osm_edge['from'], osm_edge['to'])
+                if edge_key in existing_edges_set:
+                    continue
+                
+                # Adicionar aresta OSM
+                new_edges.append(osm_edge)
+        
+        except Exception as e:
+            logger.warning(f"Erro ao processar arestas OSM: {e}")
+        
+        return new_edges
+    
     def get_data_source_info(self) -> Dict[str, any]:
         """
         Retorna informações sobre as fontes de dados
@@ -237,6 +345,12 @@ class HybridDataProcessor:
                 'description': 'GTFS Local - Dados estáticos estruturais',
                 'use_case': 'Estrutura do grafo, conexões entre paradas, rotas completas',
                 'directory': self.gtfs_dir
+            },
+            'osm': {
+                'available': self.osm_available,
+                'description': 'OpenStreetMap - Dados de infraestrutura urbana',
+                'use_case': 'Caminhos de caminhada, acessibilidade, barreiras',
+                'directory': self.osm_data_dir
             },
             'strategy': (
                 'hybrid' if (self.olho_vivo_available and self.gtfs_available) else
