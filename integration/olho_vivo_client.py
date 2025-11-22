@@ -259,7 +259,16 @@ class OlhoVivoClient:
             response = self.session.get(url, params=params, timeout=10)
             response.raise_for_status()
             
-            return response.json()
+            # A API às vezes retorna texto vazio ou HTML em vez de JSON.
+            # Tentar parsear como JSON; se falhar, logar e devolver estrutura vazia estável.
+            try:
+                data = response.json()
+                return data if isinstance(data, dict) else {}
+            except ValueError:
+                text = (response.text or '').strip()
+                logger.error(f"Erro ao obter posição dos veículos: resposta não-JSON: '{text[:200]}'")
+                # Retornar formato compatível com o frontend: sem veículos.
+                return {}
             
         except Exception as e:
             logger.error(f"Erro ao obter posição dos veículos: {str(e)}")

@@ -3,10 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel, ValidationError
 from typing import List, Optional
+from datetime import datetime
 import os, json, time, uuid, logging, traceback
 import pandas as pd
 from .ffi import Engine
-from .models import RouteRequest, AlternativesResponse, Alt, RouteDetailsRequest
+from .models import (
+    RouteRequest,
+    AlternativesResponse,
+    Alt,
+    RouteDetailsRequest,
+    BarrierReport,
+    BarrierReportResponse,
+    Notification,
+    NotificationsResponse,
+)
 from .exceptions import (
     ConneccityException, GraphLoadException, NodeNotFoundException, 
     RouteNotFoundException, InvalidProfileException, ValidationException,
@@ -29,6 +39,8 @@ from .olho_vivo_api import olho_vivo_router
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 NODES = os.path.join(DATA_DIR, "nodes.csv")
 EDGES = os.path.join(DATA_DIR, "edges.csv")
+# Arquivo simples para armazenar relatos de barreiras
+BARRIERS_FILE = os.path.join(DATA_DIR, "barriers_reports.jsonl")
 
 # Logar os caminhos efetivos
 print(f"[BOOT] CSV paths -> NODES={NODES} EDGES={EDGES}")
@@ -394,6 +406,208 @@ async def health_check():
         "version": "v1"
     }
 
+
+@app.get("/notifications", response_model=NotificationsResponse)
+async def get_notifications():
+    """
+    Retorna notificações importantes para o usuário.
+    Inclui alertas sobre barreiras, manutenções, dicas e avisos do sistema.
+    """
+    try:
+        notifications = []
+        
+        # Verificar relatos recentes de barreiras críticas
+        if os.path.isfile(BARRIERS_FILE):
+            try:
+                recent_barriers = []
+                with open(BARRIERS_FILE, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        if line.strip():
+                            try:
+                                barrier = json.loads(line)
+                                # Considerar apenas barreiras dos últimos 7 dias e com severidade >= 4
+                                if barrier.get('severity', 0) >= 4:
+                                    received_at = barrier.get('received_at', 0)
+                                    if time.time() - received_at < 7 * 24 * 3600:  # 7 dias
+                                        recent_barriers.append(barrier)
+                            except:
+                                continue
+                
+                if recent_barriers:
+                    # Agrupar por tipo de barreira
+                    barrier_types = {}
+                    for b in recent_barriers:
+                        b_type = b.get('type', 'outro')
+                        if b_type not in barrier_types:
+                            barrier_types[b_type] = 0
+                        barrier_types[b_type] += 1
+                    
+                    # Criar notificação para cada tipo crítico
+                    for b_type, count in barrier_types.items():
+                        type_names = {
+                            'escada': 'Escadas',
+                            'calcada_ruim': 'Calçadas em mau estado',
+                            'alagamento': 'Riscos de alagamento',
+                            'obstaculo': 'Obstáculos',
+                            'iluminacao_ruim': 'Iluminação inadequada',
+                            'seguranca': 'Problemas de segurança',
+                            'sinalizacao_ruim': 'Sinalização deficiente',
+                            'outro': 'Outras barreiras'
+                        }
+                        notifications.append(Notification(
+                            id=f"barrier_{b_type}_{int(time.time())}",
+                            type="warning",
+                            title=f"Alertas sobre {type_names.get(b_type, 'barreiras')}",
+                            message=f"{count} relato(s) recente(s) de {type_names.get(b_type, 'barreiras')} na região. Verifique as rotas antes de sair.",
+                            priority=4 if count >= 3 else 3,
+                            created_at=datetime.now(),
+                            expires_at=None,
+                            action_url=None,
+                            action_label=None
+                        ))
+            except Exception as e:
+                logger.warning(f"Erro ao processar barreiras para notificações: {e}")
+        
+        # Notificação de dica (rotativa)
+        tips = [
+            {
+                "title": "💡 Dica: Use o perfil correto",
+                "message": "Selecione o perfil de mobilidade adequado (Padrão, Idoso ou PcD) para obter rotas mais adequadas às suas necessidades."
+            },
+            {
+                "title": "💡 Dica: Reporte barreiras",
+                "message": "Ajude outros usuários reportando barreiras que encontrar durante seu trajeto. Sua contribuição é valiosa!"
+            },
+            {
+                "title": "💡 Dica: Salve rotas favoritas",
+                "message": "Salve suas rotas mais usadas como favoritas para acesso rápido. Toque no ícone de favorito na tela de detalhes da rota."
+            },
+            {
+                "title": "💡 Dica: Navegação em tempo real",
+                "message": "Ative a navegação para receber instruções passo a passo baseadas na sua localização GPS."
+            }
+        ]
+        
+        # Selecionar dica baseada no dia da semana (para rotacionar)
+        import calendar
+        day_of_week = datetime.now().weekday()
+        tip = tips[day_of_week % len(tips)]
+        
+        notifications.append(Notification(
+            id=f"tip_{day_of_week}",
+            type="tip",
+            title=tip["title"],
+            message=tip["message"],
+            priority=1,
+            created_at=datetime.now(),
+            expires_at=None,
+            action_url=None,
+            action_label=None
+        ))
+        
+        # Notificação sobre sistema (se houver atualizações)
+        notifications.append(Notification(
+            id="system_info",
+            type="info",
+            title="✅ Sistema operacional",
+            message="Todos os sistemas estão funcionando normalmente. Dados de transporte atualizados.",
+            priority=1,
+            created_at=datetime.now(),
+            expires_at=None,
+            action_url=None,
+            action_label=None
+        ))
+        
+        # Ordenar por prioridade (maior primeiro) e data (mais recente primeiro)
+        notifications.sort(key=lambda x: (-x.priority, -x.created_at.timestamp()))
+        
+        # Limitar a 10 notificações mais relevantes
+        notifications = notifications[:10]
+        
+        return NotificationsResponse(
+            notifications=notifications,
+            unread_count=len([n for n in notifications if n.priority >= 3])
+        )
+    except Exception as e:
+        logger.error(f"Erro ao buscar notificações: {e}")
+        return NotificationsResponse(notifications=[], unread_count=0)
+
+
+@app.post("/barriers/report", response_model=BarrierReportResponse)
+async def report_barrier(report: BarrierReport, request: Request):
+    """
+    Recebe um relato de barreira feito pelo usuário.
+    
+    Contrato JSON esperado (exemplo):
+    {
+      "route_id": 0,
+      "from_node": "18906",
+      "to_node": "4406630",
+      "step_index": 2,
+      "node_id": "720011915",
+      "profile": "pcd",
+      "type": "escada",
+      "severity": 4,
+      "description": "Escada sem corrimão ao sair da estação",
+      "lat": -23.56,
+      "lon": -46.65,
+      "app_version": "1.0.0",
+      "platform": "web"
+    }
+    """
+    try:
+        logger.info(f"[BARRIER_REPORT] Recebido relato: type={report.type}, profile={report.profile}, step_index={report.step_index}")
+        
+        # Garantir que diretório de dados existe
+        os.makedirs(DATA_DIR, exist_ok=True)
+        
+        barrier_id = str(uuid.uuid4())
+        payload = report.dict()
+        payload["id"] = barrier_id
+        payload["received_at"] = time.time()
+        payload["client_ip"] = request.client.host if request.client else None
+        
+        # Log do tipo de created_at antes da serialização
+        if "created_at" in payload:
+            logger.info(f"[BARRIER_REPORT] created_at type: {type(payload['created_at'])}, value: {payload['created_at']}")
+        
+        # Função auxiliar para converter datetime para string ISO
+        def datetime_serializer(obj):
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            raise TypeError(f"Tipo {type(obj)} não é serializável")
+        
+        # Persistência simples em arquivo .jsonl (uma linha por relato)
+        try:
+            with open(BARRIERS_FILE, "a", encoding="utf-8") as f:
+                f.write(json.dumps(payload, ensure_ascii=False, default=datetime_serializer) + "\n")
+            logger.info(f"✅ Relato de barreira '{barrier_id}' salvo com sucesso em {BARRIERS_FILE}")
+        except Exception as e:
+            logger.error(f"Erro ao salvar relato de barreira em arquivo: {e}")
+            logger.error(traceback.format_exc())
+            # Mesmo que falhe ao salvar, ainda respondemos algo amigável
+            return BarrierReportResponse(
+                id=barrier_id,
+                message="Recebemos seu relato, mas houve um problema ao salvar. Tentaremos corrigir em breve.",
+                stored=False,
+                created_at=report.created_at,
+            )
+        
+        return BarrierReportResponse(
+            id=barrier_id,
+            message="Obrigado! Seu relato de barreira foi registrado e ajudará outras pessoas.",
+            stored=True,
+            created_at=report.created_at,
+        )
+    except ValidationError as e:
+        logger.error(f"[BARRIER_REPORT] Erro de validação: {e}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=422, detail=f"Erro de validação: {str(e)}")
+    except Exception as e:
+        logger.error(f"[BARRIER_REPORT] Erro ao processar relato de barreira: {e}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Erro ao registrar barreira: {str(e)}")
+
 # Endpoint de rota
 @app.post("/route")
 async def get_route(request: RouteRequest):
@@ -600,21 +814,38 @@ async def get_alternatives(request: RouteRequest):
         for i, (path, cost) in enumerate(alternatives):
             # Converter índices para IDs de nós
             path_ids = [engine.node_id(idx) for idx in path]
-            
-            # Calcular transferências e barreiras se dados disponíveis
-            transfers = 0
-            barriers = []
-            if edges_df is not None:
-                transfers = calculate_transfers(path_ids, edges_df)
-                barriers = identify_avoided_barriers(path_ids, edges_df, request.perfil)
-            
-            alt = Alt(
-                id=i,
-                tempo_total_min=cost,
-                transferencias=transfers,
-                path=path_ids,
-                barreiras_evitas=barriers
-            )
+
+            # Se tivermos dados do grafo carregados, usar utilitário completo para
+            # calcular tempo em minutos, transferências, barreiras e modos.
+            if edges_df is not None and nodes_df is not None:
+                details = build_route_details(path_ids, cost, edges_df, nodes_df, request.perfil)
+
+                alt = Alt(
+                    id=i,
+                    tempo_total_min=details.get("total_time_min", cost),
+                    transferencias=details.get("transfers", 0),
+                    path=path_ids,
+                    barreiras_evitas=details.get("barriers_avoided", []),
+                    modes=details.get("modes", [])
+                )
+            else:
+                # Fallback: usar custo bruto como tempo e calcular apenas transferências/barreiras
+                transfers = calculate_transfers(path_ids, edges_df) if edges_df is not None else 0
+                barriers = identify_avoided_barriers(path_ids, edges_df, request.perfil) if edges_df is not None else []
+                modes: list[str] = []
+                if edges_df is not None:
+                    segments = get_path_segments(path_ids, edges_df)
+                    modes = list(set(seg["modo"] for seg in segments if seg.get("modo")))
+
+                alt = Alt(
+                    id=i,
+                    tempo_total_min=cost,
+                    transferencias=transfers,
+                    path=path_ids,
+                    barreiras_evitas=barriers,
+                    modes=modes
+                )
+
             alt_list.append(alt)
         
         logger.info(f"[ALTERNATIVES] {len(alt_list)} rotas alternativas calculadas")

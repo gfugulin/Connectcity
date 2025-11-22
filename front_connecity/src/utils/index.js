@@ -93,16 +93,21 @@ export function getErrorMessage(error) {
  * Salva favorito no localStorage
  * @param {Object} route - Objeto de rota
  * @param {string} name - Nome do favorito
+ * @param {string} icon - Ícone selecionado (opcional)
  * @returns {Object} Favorito salvo
  */
-export function saveFavorite(route, name) {
+export function saveFavorite(route, name, icon = null) {
   const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
   const favorite = {
     id: Date.now().toString(),
     name: name || `Rota ${favorites.length + 1}`,
     route: route,
-    from: route.from || '',
-    to: route.to || '',
+    from: route.from || route.from_name || '',
+    to: route.to || route.to_name || '',
+    fromId: route.fromId || null,
+    toId: route.toId || null,
+    profile: route.profile || 'padrao',
+    icon: icon || getFavoriteIcon(name),
     createdAt: new Date().toISOString()
   };
   favorites.push(favorite);
@@ -154,7 +159,8 @@ export function getFavoriteIcon(name) {
   const nameLower = name.toLowerCase();
   if (nameLower.includes('casa') || nameLower.includes('home')) return 'home';
   if (nameLower.includes('trabalho') || nameLower.includes('work')) return 'work';
-  if (nameLower.includes('faculdade') || nameLower.includes('escola') || nameLower.includes('school')) return 'school';
+  if (nameLower.includes('faculdade') || nameLower.includes('universidade') || nameLower.includes('university')) return 'school';
+  if (nameLower.includes('escola') || nameLower.includes('school')) return 'school';
   if (nameLower.includes('academia') || nameLower.includes('gym')) return 'fitness_center';
   if (nameLower.includes('mercado') || nameLower.includes('shopping')) return 'shopping_cart';
   return 'place';

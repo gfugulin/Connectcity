@@ -1,806 +1,256 @@
-2025-11-21 17:45:38 [BOOT] CSV paths -> NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
-2025-11-21 17:45:38 [BOOT] DATA_DIR=/app/data
-2025-11-21 17:45:38 [BOOT] NODES existe: True
-2025-11-21 17:45:38 [BOOT] EDGES existe: True
-2025-11-21 17:45:38 [BOOT] 📁 Diretório GTFS encontrado: GTFS
-2025-11-21 17:45:38 🔐 Tentando autenticar na API Olho Vivo
-2025-11-21 17:45:38    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
-2025-11-21 17:45:38    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
-2025-11-21 17:45:38    Token completo (últimos 10 chars): ...cb5d63be81
-2025-11-21 17:45:38    Token length: 64
-2025-11-21 17:45:38    Token repr: '1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81'
-2025-11-21 17:45:38    Tentando método 1: POST com token na query string
-2025-11-21 17:45:38    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
-2025-11-21 17:45:38    Headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/'}
-2025-11-21 17:45:39    Status code: 200
-2025-11-21 17:45:39    Response text: true
-2025-11-21 17:45:39    Response headers: {'Date': 'Fri, 21 Nov 2025 20:45:39 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '4', 'Connection': 'keep-alive', 'CF-RAY': '9a2308330bd202f2-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'Set-Cookie': 'apiCredentials=B2CF6ECDF8B198C4AEDDA08352EB1AF5064EA6041DFE6642E772E4180808FEED8D54892993AC393BACC8D02EA27763676D587E0B87FB8EAE437C2E4DD91A8D59EF191BA6B1CCD97954E89CDE1E762EF5DF39796633E2292391EC93410D8A68BDBABF729B2446D4D02B6250A0147DDF401DE0354FF9C9134E5C8FB9C6A05C586C9FD25F275541D93C2A1D574156CB4AC46A1A8D2B0F4270F1836921D5F4ACBA141B67D439C9FFAC37A442E1C773A8138B9FCC692467D8E53E9B0A96B11FD2881D84D03F7F; path=/; HttpOnly; SameSite=Lax', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
-2025-11-21 17:45:39    Request URL final: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
-2025-11-21 17:45:39    Request headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/', 'Content-Length': '0'}
-2025-11-21 17:45:39    Response JSON: True (tipo: bool)
-2025-11-21 17:45:39 ✅ Autenticação na API Olho Vivo bem-sucedida
-2025-11-21 17:45:39 ✅ API Olho Vivo disponível
-2025-11-21 17:45:39 📁 Diretório GTFS encontrado: GTFS
-2025-11-21 17:45:39 ✅ GTFS local disponível: GTFS
-2025-11-21 17:45:39 📊 Status das fontes de dados: {'olho_vivo': True, 'gtfs_local': True, 'osm': False}
-2025-11-21 17:45:39 📁 Carregando estrutura do grafo do GTFS local...
-2025-11-21 17:45:39 Processando arquivos GTFS do diretório: GTFS
-2025-11-21 17:45:39 Carregadas 22056 paradas
-2025-11-21 17:45:39 Carregadas 1344 rotas
-2025-11-21 17:45:39 Carregadas 2251 viagens
-2025-11-21 17:45:39 Carregados 10000 horários de parada
-2025-11-21 17:45:39 ✅ Arquivos GTFS processados: 22056 paradas, 1344 rotas, 2251 viagens
-2025-11-21 17:45:39 Criando conexões de caminhada (máx 1000m, 10 por nó)...
-2025-11-21 17:45:39 Índice espacial criado: 1186 células, 22056 nós
-2025-11-21 17:45:45 ✅ Criadas 234782 conexões de caminhada
-2025-11-21 17:45:45 Adicionadas 234782 conexões de caminhada (bidirecionais)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 1000/22056 nós processados, 1000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 2000/22056 nós processados, 2000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 3000/22056 nós processados, 3000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 4000/22056 nós processados, 4000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 5000/22056 nós processados, 5000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Progresso: 5000/22056 nós processados, 5000 inseridos no índice (100.0%)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 6000/22056 nós processados, 6000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 7000/22056 nós processados, 7000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 8000/22056 nós processados, 8000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 9000/22056 nós processados, 9000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 10000/22056 nós processados, 10000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Progresso: 10000/22056 nós processados, 10000 inseridos no índice (100.0%)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 11000/22056 nós processados, 11000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 12000/22056 nós processados, 12000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 13000/22056 nós processados, 13000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 14000/22056 nós processados, 14000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 15000/22056 nós processados, 15000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Progresso: 15000/22056 nós processados, 15000 inseridos no índice (100.0%)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 16000/22056 nós processados, 16000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 17000/22056 nós processados, 17000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 18000/22056 nós processados, 18000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 19000/22056 nós processados, 19000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 20000/22056 nós processados, 20000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Progresso: 20000/22056 nós processados, 20000 inseridos no índice (100.0%)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 21000/22056 nós processados, 21000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Checkpoint: 22000/22056 nós processados, 22000 inseridos no índice (100.0%, inseriu: SIM)
-2025-11-21 17:45:47 [GRAPH] Carregamento concluído: 22056 nós processados, 22056 inseridos no índice
-2025-11-21 17:45:47 [GRAPH] ✅ Índice hash populado: 22056/22056 nós (100%)
-2025-11-21 17:45:50 [GRAPH] Arestas carregadas: 244547, ignoradas: 0 (total no CSV: ~244547)
-2025-11-21 17:45:50 [GRAPH] Debug: No 18856 (indice 8) tem 13 arestas
-2025-11-21 17:45:45 Convertidos 22056 nós e 244547 arestas (incluindo caminhada)
-2025-11-21 17:45:45 ✅ 22056 nós carregados do GTFS local
-2025-11-21 17:45:45 ✅ 244547 arestas carregadas do GTFS local (incluindo caminhada)
-2025-11-21 17:45:45 ✅ API Olho Vivo disponível para dados em tempo real (posição de veículos, previsões)
-2025-11-21 17:45:46 ✅ Dados exportados: /app/data/hybrid/nodes.csv, /app/data/hybrid/edges.csv
-2025-11-21 17:45:50 ✅ Engine inicializado com dados híbridos (estratégia: hybrid)
-2025-11-21 17:45:50    - API Olho Vivo: ✅
-2025-11-21 17:45:50    - GTFS Local: ✅
-2025-11-21 17:45:50 ✅ Engine inicializado com sucesso!
-2025-11-21 17:45:51 Dados do grafo carregados: 22056 nós, 244547 arestas
-2025-11-21 17:45:51 ✅ Dados do grafo carregados para utilitários (dados híbridos - API Olho Vivo + GTFS)
-2025-11-21 17:45:51 INFO:     Started server process [1]
-2025-11-21 17:45:51 INFO:     Waiting for application startup.
-2025-11-21 17:45:51 INFO:     Application startup complete.
-2025-11-21 17:45:51 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-2025-11-21 17:46:06 [274d0727] GET /health
-2025-11-21 17:46:06 [274d0727] 200 0.001s
-2025-11-21 17:46:06 INFO:     172.18.0.1:35684 - "GET /health HTTP/1.1" 200 OK
-2025-11-21 17:46:08 [2c615480] GET /nodes/search
-2025-11-21 17:46:08 [2c615480] 200 0.041s
-2025-11-21 17:46:08 INFO:     172.18.0.1:35684 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [c46e66ea] GET /nodes/search
-2025-11-21 17:46:09 INFO:     172.18.0.1:35684 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [c46e66ea] 200 0.035s
-2025-11-21 17:46:09 [48587707] GET /nodes/search
-2025-11-21 17:46:09 [48587707] 200 0.038s
-2025-11-21 17:46:09 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [ca73c512] GET /nodes/search
-2025-11-21 17:46:09 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [ca73c512] 200 0.083s
-2025-11-21 17:46:09 [4c39814a] GET /nodes/search
-2025-11-21 17:46:09 [6c6701c0] GET /nodes/search
-2025-11-21 17:46:09 [4c39814a] 200 0.076s
-2025-11-21 17:46:09 INFO:     172.18.0.1:35684 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:09 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [6c6701c0] 200 0.048s
-2025-11-21 17:46:09 [f518b828] GET /nodes/search
-2025-11-21 17:46:09 [e657980c] GET /nodes/search
-2025-11-21 17:46:09 [f518b828] 200 0.057s
-2025-11-21 17:46:09 [e657980c] 200 0.043s
-2025-11-21 17:46:09 INFO:     172.18.0.1:35684 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:09 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [38ad0df0] GET /nodes/search
-2025-11-21 17:46:09 INFO:     172.18.0.1:35702 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:46:09 [38ad0df0] 200 0.033s
-2025-11-21 17:46:12 [a31699b8] GET /nodes/search
-2025-11-21 17:46:12 INFO:     172.18.0.1:35702 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:12 [a31699b8] 200 0.037s
-2025-11-21 17:46:12 [825cbb72] GET /nodes/search
-2025-11-21 17:46:12 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:12 [825cbb72] 200 0.042s
-2025-11-21 17:46:12 [b0ea99c3] GET /nodes/search
-2025-11-21 17:46:12 [30501f26] GET /nodes/search
-2025-11-21 17:46:12 [b0ea99c3] 200 0.039s
-2025-11-21 17:46:12 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:12 [bfc74ba5] GET /nodes/search
-2025-11-21 17:46:12 [30501f26] 200 0.050s
-2025-11-21 17:46:12 INFO:     172.18.0.1:35702 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:12 [bfc74ba5] 200 0.051s
-2025-11-21 17:46:12 [9ddcd0ed] GET /nodes/search
-2025-11-21 17:46:12 INFO:     172.18.0.1:35684 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:46:12 [6ddbf5f9] GET /nodes/search
-2025-11-21 17:46:12 [9ddcd0ed] 200 0.101s
-2025-11-21 17:46:12 [6ddbf5f9] 200 0.045s
-2025-11-21 17:46:12 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:12 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:13 [f68f7c75] GET /nodes/search
-2025-11-21 17:46:13 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=A HTTP/1.1" 200 OK
-2025-11-21 17:46:13 [f68f7c75] 200 0.038s
-2025-11-21 17:46:13 [5f09d247] GET /nodes/search
-2025-11-21 17:46:13 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av HTTP/1.1" 200 OK
-2025-11-21 17:46:13 [5f09d247] 200 0.033s
-2025-11-21 17:46:13 [237a8f98] GET /nodes/search
-2025-11-21 17:46:13 [237a8f98] 200 0.042s
-2025-11-21 17:46:13 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av HTTP/1.1" 200 OK
-2025-11-21 17:46:14 [43124607] GET /nodes/search
-2025-11-21 17:46:14 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av. HTTP/1.1" 200 OK
-2025-11-21 17:46:14 [43124607] 200 0.036s
-2025-11-21 17:46:14 [4fd4c59c] GET /nodes/search
-2025-11-21 17:46:14 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av. HTTP/1.1" 200 OK
-2025-11-21 17:46:14 [4fd4c59c] 200 0.053s
-2025-11-21 17:46:14 [03e88ac1] GET /nodes/search
-2025-11-21 17:46:14 [03e88ac1] 200 0.036s
-2025-11-21 17:46:14 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+ HTTP/1.1" 200 OK
-2025-11-21 17:46:14 [c76693e8] GET /nodes/search
-2025-11-21 17:46:14 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+ HTTP/1.1" 200 OK
-2025-11-21 17:46:14 [c76693e8] 200 0.036s
-2025-11-21 17:46:15 [cecfafd3] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+P HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [cecfafd3] 200 0.033s
-2025-11-21 17:46:15 [eff104c6] GET /nodes/search
-2025-11-21 17:46:15 [eff104c6] 200 0.038s
-2025-11-21 17:46:15 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+P HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [30ea2546] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Pa HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [30ea2546] 200 0.031s
-2025-11-21 17:46:15 [038ec365] GET /nodes/search
-2025-11-21 17:46:15 [038ec365] 200 0.035s
-2025-11-21 17:46:15 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+Pa HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [ef02c624] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+Pau HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [ef02c624] 200 0.032s
-2025-11-21 17:46:15 [edc5c54d] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Pau HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [edc5c54d] 200 0.034s
-2025-11-21 17:46:15 [a91f63fb] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paul HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [a91f63fb] 200 0.036s
-2025-11-21 17:46:15 [eae4d6f4] GET /nodes/search
-2025-11-21 17:46:15 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+Paul HTTP/1.1" 200 OK
-2025-11-21 17:46:15 [eae4d6f4] 200 0.033s
-2025-11-21 17:46:16 [e2e0ee9d] GET /nodes/search
-2025-11-21 17:46:16 [e2e0ee9d] 200 0.048s
-2025-11-21 17:46:16 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:17 [21a5d049] GET /nodes/search
-2025-11-21 17:46:17 [3b0b6bc3] GET /nodes/search
-2025-11-21 17:46:17 [21a5d049] 200 0.068s
-2025-11-21 17:46:17 [3b0b6bc3] 200 0.031s
-2025-11-21 17:46:17 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:46:17 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [6acc2e89] GET /nodes/search
-2025-11-21 17:46:18 [222fa927] GET /nodes/search
-2025-11-21 17:46:18 [6acc2e89] 200 0.039s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Co HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [222fa927] 200 0.030s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [fb149ac2] GET /nodes/search
-2025-11-21 17:46:18 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Co HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [fb149ac2] 200 0.034s
-2025-11-21 17:46:18 [37689ac0] GET /nodes/search
-2025-11-21 17:46:18 [2d655b0b] GET /nodes/search
-2025-11-21 17:46:18 [37689ac0] 200 0.032s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Con HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [2d655b0b] 200 0.036s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [50f02fa0] GET /nodes/search
-2025-11-21 17:46:18 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Con HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [50f02fa0] 200 0.036s
-2025-11-21 17:46:18 [6bcea6a7] GET /nodes/search
-2025-11-21 17:46:18 [c05426f7] GET /nodes/search
-2025-11-21 17:46:18 [6bcea6a7] 200 0.038s
-2025-11-21 17:46:18 [c05426f7] 200 0.033s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Cons HTTP/1.1" 200 OK
-2025-11-21 17:46:18 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [169bf67f] GET /nodes/search
-2025-11-21 17:46:18 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Cons HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [169bf67f] 200 0.034s
-2025-11-21 17:46:18 [86b19cd1] GET /nodes/search
-2025-11-21 17:46:18 [a53a0744] GET /nodes/search
-2025-11-21 17:46:18 [86b19cd1] 200 0.033s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Conso HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [a53a0744] 200 0.040s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [57cddc26] GET /nodes/search
-2025-11-21 17:46:18 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Conso HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [57cddc26] 200 0.051s
-2025-11-21 17:46:18 [d6d12310] GET /nodes/search
-2025-11-21 17:46:18 [6270f7a6] GET /nodes/search
-2025-11-21 17:46:18 [d6d12310] 200 0.039s
-2025-11-21 17:46:18 [6270f7a6] 200 0.032s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Consol HTTP/1.1" 200 OK
-2025-11-21 17:46:18 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:18 [d4c59f02] GET /nodes/search
-2025-11-21 17:46:18 [d4c59f02] 200 0.033s
-2025-11-21 17:46:18 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Consol HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [ce1863e8] GET /nodes/search
-2025-11-21 17:46:19 [01812efa] GET /nodes/search
-2025-11-21 17:46:19 [ce1863e8] 200 0.034s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Consola HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [01812efa] 200 0.038s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [2dea3602] GET /nodes/search
-2025-11-21 17:46:19 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Consola HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [2dea3602] 200 0.039s
-2025-11-21 17:46:19 [1042961c] GET /nodes/search
-2025-11-21 17:46:19 [c125675b] GET /nodes/search
-2025-11-21 17:46:19 [1042961c] 200 0.037s
-2025-11-21 17:46:19 [c125675b] 200 0.029s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Consola%C3%A7 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [058bac83] GET /nodes/search
-2025-11-21 17:46:19 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Consola%C3%A7 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [058bac83] 200 0.038s
-2025-11-21 17:46:19 [36155b99] GET /nodes/search
-2025-11-21 17:46:19 [f08bd3ef] GET /nodes/search
-2025-11-21 17:46:19 [36155b99] 200 0.032s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Consola%C3%A7%C3%A3 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [f08bd3ef] 200 0.041s
-2025-11-21 17:46:19 [e91db6f4] GET /nodes/search
-2025-11-21 17:46:19 [e91db6f4] 200 0.034s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Consola%C3%A7%C3%A3 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [4a795287] GET /nodes/search
-2025-11-21 17:46:19 [f98f2178] GET /nodes/search
-2025-11-21 17:46:19 [4a795287] 200 0.032s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35704 - "GET /nodes/search?q=Consola%C3%A7%C3%A3o HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [f98f2178] 200 0.030s
-2025-11-21 17:46:19 INFO:     172.18.0.1:35688 - "GET /nodes/search?q=Av.+Paulista,+900 HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [662a6b13] GET /nodes/search
-2025-11-21 17:46:19 INFO:     172.18.0.1:35266 - "GET /nodes/search?q=Consola%C3%A7%C3%A3o HTTP/1.1" 200 OK
-2025-11-21 17:46:19 [662a6b13] 200 0.032s
-2025-11-21 17:46:22 INFO:     172.18.0.1:35280 - "OPTIONS /alternatives HTTP/1.1" 200 OK
-2025-11-21 17:46:22 [bfd25a4b] OPTIONS /alternatives
-2025-11-21 17:46:22 [bfd25a4b] 200 0.000s
-2025-11-21 17:46:22 [887fde8a] POST /alternatives
-2025-11-21 17:46:22 [ALTERNATIVES] Requisição recebida: from=706304, to=18850, perfil=padrao, k=3
-2025-11-21 17:46:22 [ALTERNATIVES] Buscando nós: from_id='706304' -> índice=458, to_id='18850' -> índice=2
-2025-11-21 17:46:22 [ALTERNATIVES] Índice 458 corresponde ao ID: '706304' (esperado: '706304')
-2025-11-21 17:46:22 [ALTERNATIVES] Índice 2 corresponde ao ID: '18850' (esperado: '18850')
-2025-11-21 17:46:22 [ALTERNATIVES] Índices encontrados: origem=458, destino=2
-2025-11-21 17:46:22 [ALTERNATIVES] Calculando 3 rotas alternativas...
-2025-11-21 17:46:22 [ALTERNATIVES] Parâmetros: alpha=6.0, beta=2.0, gamma=1.0, delta=4.0
-2025-11-21 17:46:22 [ALTERNATIVES] Algoritmo executado em 0.001s
-2025-11-21 17:46:22 [ALTERNATIVES] Algoritmo retornou 3 rotas
-2025-11-21 17:46:22 [ALTERNATIVES] 3 rotas alternativas calculadas
-2025-11-21 17:46:22 [887fde8a] 200 0.018s
-2025-11-21 17:46:22 INFO:     172.18.0.1:35280 - "POST /alternatives HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [adbc20b1] OPTIONS /route/details
-2025-11-21 17:46:31 [4104e8a5] OPTIONS /route/details
-2025-11-21 17:46:31 [adbc20b1] 200 0.001s
-2025-11-21 17:46:31 [4104e8a5] 200 0.001s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "OPTIONS /route/details HTTP/1.1" 200 OK
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "OPTIONS /route/details HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [0896f8a5] POST /route/details
-2025-11-21 17:46:31 [584a2fbe] POST /route/details
-2025-11-21 17:46:31 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:46:31 Traceback (most recent call last):
-2025-11-21 17:46:31   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:46:31     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:46:31               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:46:31 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:46:31 
-2025-11-21 17:46:31 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:46:31 Traceback (most recent call last):
-2025-11-21 17:46:31   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:46:31     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:46:31               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:46:31 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:46:31 
-2025-11-21 17:46:31 [0896f8a5] 500 0.011s
-2025-11-21 17:46:31 [584a2fbe] 500 0.011s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:46:31 [2293951d] GET /nodes/search
-2025-11-21 17:46:31 [2293951d] 200 0.084s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "GET /nodes/search?q=706304 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [7aa79ebd] GET /nodes/search
-2025-11-21 17:46:31 [d9ac2a37] GET /nodes/search
-2025-11-21 17:46:31 [7aa79ebd] 200 0.045s
-2025-11-21 17:46:31 [d9ac2a37] 200 0.037s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "GET /nodes/search?q=706304 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "GET /nodes/search?q=70016916 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [fc5ffef9] GET /nodes/search
-2025-11-21 17:46:31 [7ec57990] GET /nodes/search
-2025-11-21 17:46:31 [fc5ffef9] 200 0.035s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "GET /nodes/search?q=70016916 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [7ec57990] 200 0.041s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "GET /nodes/search?q=70015949 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [94f17e7a] GET /nodes/search
-2025-11-21 17:46:31 [13bd96f9] GET /nodes/search
-2025-11-21 17:46:31 [94f17e7a] 200 0.032s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "GET /nodes/search?q=70015949 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [13bd96f9] 200 0.037s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "GET /nodes/search?q=260016919 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [ab6701c5] GET /nodes/search
-2025-11-21 17:46:31 [e94203e8] GET /nodes/search
-2025-11-21 17:46:31 [ab6701c5] 200 0.044s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49132 - "GET /nodes/search?q=260016919 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [e94203e8] 200 0.040s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "GET /nodes/search?q=18850 HTTP/1.1" 200 OK
-2025-11-21 17:46:31 [7fb5fe5c] GET /nodes/search
-2025-11-21 17:46:31 [7fb5fe5c] 200 0.054s
-2025-11-21 17:46:31 INFO:     172.18.0.1:49130 - "GET /nodes/search?q=18850 HTTP/1.1" 200 OK
-2025-11-21 17:46:47 [53b76e81] GET /olho-vivo/posicao
-2025-11-21 17:46:47 🔐 Tentando autenticar na API Olho Vivo
-2025-11-21 17:46:47    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
-2025-11-21 17:46:47    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
-2025-11-21 17:46:47    Token completo (últimos 10 chars): ...cb5d63be81
-2025-11-21 17:46:47    Token length: 64
-2025-11-21 17:46:47    Token repr: '1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81'
-2025-11-21 17:46:47    Tentando método 1: POST com token na query string
-2025-11-21 17:46:47    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
-2025-11-21 17:46:47    Headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/'}
-2025-11-21 17:46:48    Status code: 200
-2025-11-21 17:46:48    Response text: true
-2025-11-21 17:46:48    Response headers: {'Date': 'Fri, 21 Nov 2025 20:46:48 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '4', 'Connection': 'keep-alive', 'CF-RAY': '9a2309e14823c8ae-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'Set-Cookie': 'apiCredentials=06FBE5D98D1AB669B4D1579781173C035DE29EFC087065BC6DF0DEA0A6B1707DDBE4B517B6F32AAC640D74E077E663294625EE863770BAC070E7208A5BCE3CB9CB3ECA66547E709160F1FE10EC0948EAD51D24D664D15BF5755C213551134BAF269073038A48A4429F17E06A910188DD999DE9904B0CF87A48E1470D0B3826F552D121FB0575487088705BBB14CC5FD37A83F3B21F5A12C4E631188643DCB88A3C1A82E54CABC50C050D39FC89CEBA936A94AFC0B7CF66155E4E476FF126718CB903B2A0; path=/; HttpOnly; SameSite=Lax', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
-2025-11-21 17:46:48    Request URL final: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
-2025-11-21 17:46:48    Request headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/', 'Content-Length': '0'}
-2025-11-21 17:46:48    Response JSON: True (tipo: bool)
-2025-11-21 17:46:48 ✅ Autenticação na API Olho Vivo bem-sucedida
-2025-11-21 17:46:48 Erro ao obter posição dos veículos: Expecting value: line 1 column 1 (char 0)
-2025-11-21 17:46:48 [53b76e81] 200 0.550s
-2025-11-21 17:46:48 INFO:     172.18.0.1:45474 - "GET /olho-vivo/posicao HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [ad222a22] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [ad222a22] 200 0.031s
-2025-11-21 17:46:59 [e0c21e9d] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [e0c21e9d] 200 0.032s
-2025-11-21 17:46:59 [accbc587] GET /nodes/search
-2025-11-21 17:46:59 [accbc587] 200 0.032s
-2025-11-21 17:46:59 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [9b109328] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [9b109328] 200 0.032s
-2025-11-21 17:46:59 [24af0018] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [24af0018] 200 0.032s
-2025-11-21 17:46:59 [8749cdee] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [8749cdee] 200 0.039s
-2025-11-21 17:46:59 [2676e2fd] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [2676e2fd] 200 0.032s
-2025-11-21 17:46:59 [88db6b24] GET /nodes/search
-2025-11-21 17:46:59 [88db6b24] 200 0.035s
-2025-11-21 17:46:59 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [cc29d2c8] GET /nodes/search
-2025-11-21 17:46:59 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:46:59 [cc29d2c8] 200 0.033s
-2025-11-21 17:47:00 [61a3fb3a] GET /nodes/search
-2025-11-21 17:47:00 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Cidade HTTP/1.1" 200 OK
-2025-11-21 17:47:00 [61a3fb3a] 200 0.049s
-2025-11-21 17:47:00 [c475f65a] GET /nodes/search
-2025-11-21 17:47:00 [c475f65a] 200 0.032s
-2025-11-21 17:47:00 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade HTTP/1.1" 200 OK
-2025-11-21 17:47:01 [5f00dcaa] GET /nodes/search
-2025-11-21 17:47:01 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:01 [5f00dcaa] 200 0.036s
-2025-11-21 17:47:02 [2ca80b71] GET /nodes/search
-2025-11-21 17:47:02 [cbdfe606] GET /nodes/search
-2025-11-21 17:47:02 [2ca80b71] 200 0.039s
-2025-11-21 17:47:02 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:02 [cbdfe606] 200 0.035s
-2025-11-21 17:47:02 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:47:02 [eebfb46d] GET /nodes/search
-2025-11-21 17:47:02 [16930fe3] GET /nodes/search
-2025-11-21 17:47:02 [eebfb46d] 200 0.034s
-2025-11-21 17:47:02 [16930fe3] 200 0.031s
-2025-11-21 17:47:02 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Co HTTP/1.1" 200 OK
-2025-11-21 17:47:02 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:02 [0a50f7e6] GET /nodes/search
-2025-11-21 17:47:03 [0a50f7e6] 200 0.040s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Co HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [e14650ee] GET /nodes/search
-2025-11-21 17:47:03 [6aef0027] GET /nodes/search
-2025-11-21 17:47:03 [e14650ee] 200 0.037s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Con HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [6aef0027] 200 0.039s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [cc55c76d] GET /nodes/search
-2025-11-21 17:47:03 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Con HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [cc55c76d] 200 0.035s
-2025-11-21 17:47:03 [49ddd793] GET /nodes/search
-2025-11-21 17:47:03 [b53608a8] GET /nodes/search
-2025-11-21 17:47:03 [49ddd793] 200 0.038s
-2025-11-21 17:47:03 [b53608a8] 200 0.030s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Cons HTTP/1.1" 200 OK
-2025-11-21 17:47:03 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [1f1ddb21] GET /nodes/search
-2025-11-21 17:47:03 [1f1ddb21] 200 0.036s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Cons HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [b4a33bc4] GET /nodes/search
-2025-11-21 17:47:03 [00c42eed] GET /nodes/search
-2025-11-21 17:47:03 [b4a33bc4] 200 0.032s
-2025-11-21 17:47:03 [00c42eed] 200 0.037s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Conso HTTP/1.1" 200 OK
-2025-11-21 17:47:03 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [e2eef272] GET /nodes/search
-2025-11-21 17:47:03 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Conso HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [e2eef272] 200 0.034s
-2025-11-21 17:47:03 [b1cdd2ff] GET /nodes/search
-2025-11-21 17:47:03 [76c3d6dc] GET /nodes/search
-2025-11-21 17:47:03 [b1cdd2ff] 200 0.033s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48586 - "GET /nodes/search?q=Consol HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [76c3d6dc] 200 0.031s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:03 [52be9f3c] GET /nodes/search
-2025-11-21 17:47:03 [52be9f3c] 200 0.036s
-2025-11-21 17:47:03 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Consol HTTP/1.1" 200 OK
-2025-11-21 17:47:04 [465c2a59] GET /nodes/search
-2025-11-21 17:47:04 [875a5b52] GET /nodes/search
-2025-11-21 17:47:04 [465c2a59] 200 0.090s
-2025-11-21 17:47:04 [875a5b52] 200 0.041s
-2025-11-21 17:47:04 INFO:     172.18.0.1:48602 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:04 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=Consola%C3%A7%C3%A3o HTTP/1.1" 200 OK
-2025-11-21 17:47:05 [b6fb9222] POST /alternatives
-2025-11-21 17:47:05 [ALTERNATIVES] Requisição recebida: from=18913, to=18850, perfil=padrao, k=3
-2025-11-21 17:47:05 [ALTERNATIVES] Buscando nós: from_id='18913' -> índice=61, to_id='18850' -> índice=2
-2025-11-21 17:47:05 [ALTERNATIVES] Índice 61 corresponde ao ID: '18913' (esperado: '18913')
-2025-11-21 17:47:05 [ALTERNATIVES] Índice 2 corresponde ao ID: '18850' (esperado: '18850')
-2025-11-21 17:47:05 [ALTERNATIVES] Índices encontrados: origem=61, destino=2
-2025-11-21 17:47:05 [ALTERNATIVES] Calculando 3 rotas alternativas...
-2025-11-21 17:47:05 [ALTERNATIVES] Parâmetros: alpha=6.0, beta=2.0, gamma=1.0, delta=4.0
-2025-11-21 17:47:05 [ALTERNATIVES] Algoritmo executado em 0.003s
-2025-11-21 17:47:05 [ALTERNATIVES] Algoritmo retornou 3 rotas
-2025-11-21 17:47:05 [ALTERNATIVES] 3 rotas alternativas calculadas
-2025-11-21 17:47:05 [b6fb9222] 200 0.045s
-2025-11-21 17:47:05 INFO:     172.18.0.1:48588 - "POST /alternatives HTTP/1.1" 200 OK
-2025-11-21 17:47:09 [3550fe22] POST /route/details
-2025-11-21 17:47:09 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:09 Traceback (most recent call last):
-2025-11-21 17:47:09   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:47:09     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:47:09               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:47:09 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:09 
-2025-11-21 17:47:09 [3550fe22] 500 0.013s
-2025-11-21 17:47:09 INFO:     172.18.0.1:48588 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:47:09 [101543ac] POST /route/details
-2025-11-21 17:47:09 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:09 Traceback (most recent call last):
-2025-11-21 17:47:09   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:47:09     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:47:09               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:47:09 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:09 
-2025-11-21 17:47:09 [578673d2] GET /nodes/search
-2025-11-21 17:47:09 [101543ac] 500 0.025s
-2025-11-21 17:47:09 [578673d2] 200 0.049s
-2025-11-21 17:47:09 INFO:     172.18.0.1:55406 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:47:09 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=18913 HTTP/1.1" 200 OK
-2025-11-21 17:47:09 [349471bd] GET /nodes/search
-2025-11-21 17:47:09 [b78435b7] GET /nodes/search
-2025-11-21 17:47:09 [349471bd] 200 0.038s
-2025-11-21 17:47:09 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=18913 HTTP/1.1" 200 OK
-2025-11-21 17:47:09 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015451 HTTP/1.1" 200 OK
-2025-11-21 17:47:09 [b78435b7] 200 0.056s
-2025-11-21 17:47:10 [80df78ec] GET /nodes/search
-2025-11-21 17:47:10 [43c48837] GET /nodes/search
-2025-11-21 17:47:10 [80df78ec] 200 0.034s
-2025-11-21 17:47:10 [43c48837] 200 0.032s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015451 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=630015449 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [dc336928] GET /nodes/search
-2025-11-21 17:47:10 [df322f5f] GET /nodes/search
-2025-11-21 17:47:10 [dc336928] 200 0.030s
-2025-11-21 17:47:10 [df322f5f] 200 0.030s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=3406544 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015449 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [3e83820f] GET /nodes/search
-2025-11-21 17:47:10 [52a5f563] GET /nodes/search
-2025-11-21 17:47:10 [3e83820f] 200 0.030s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015115 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [52a5f563] 200 0.036s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=3406544 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [63fb2f26] GET /nodes/search
-2025-11-21 17:47:10 [01168937] GET /nodes/search
-2025-11-21 17:47:10 [63fb2f26] 200 0.031s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=630015114 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [01168937] 200 0.032s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015115 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [d67f8d4e] GET /nodes/search
-2025-11-21 17:47:10 [40429060] GET /nodes/search
-2025-11-21 17:47:10 [d67f8d4e] 200 0.036s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=630015112 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015114 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [40429060] 200 0.030s
-2025-11-21 17:47:10 [ec82bdb0] GET /nodes/search
-2025-11-21 17:47:10 [68fd4a7f] GET /nodes/search
-2025-11-21 17:47:10 [ec82bdb0] 200 0.030s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015110 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [68fd4a7f] 200 0.039s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=630015112 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [bdf29aa8] GET /nodes/search
-2025-11-21 17:47:10 [2ed7fc94] GET /nodes/search
-2025-11-21 17:47:10 [bdf29aa8] 200 0.031s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015108 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=630015110 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [2ed7fc94] 200 0.031s
-2025-11-21 17:47:10 [ac4ef2f5] GET /nodes/search
-2025-11-21 17:47:10 [9a47648a] GET /nodes/search
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015108 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=4406636 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [ac4ef2f5] 200 0.069s
-2025-11-21 17:47:10 [9a47648a] 200 0.032s
-2025-11-21 17:47:10 [bbea791c] GET /nodes/search
-2025-11-21 17:47:10 [a005c0d9] GET /nodes/search
-2025-11-21 17:47:10 [bbea791c] 200 0.067s
-2025-11-21 17:47:10 [a005c0d9] 200 0.039s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=4406636 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015130 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [b50fbd58] GET /nodes/search
-2025-11-21 17:47:10 [71296d9c] GET /nodes/search
-2025-11-21 17:47:10 [b50fbd58] 200 0.034s
-2025-11-21 17:47:10 [71296d9c] 200 0.031s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015130 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015134 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [23a3a4cf] GET /nodes/search
-2025-11-21 17:47:10 [151a9443] GET /nodes/search
-2025-11-21 17:47:10 [23a3a4cf] 200 0.031s
-2025-11-21 17:47:10 [151a9443] 200 0.031s
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015134 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015137 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [a7648d17] GET /nodes/search
-2025-11-21 17:47:10 [e3ea612e] GET /nodes/search
-2025-11-21 17:47:10 [a7648d17] 200 0.029s
-2025-11-21 17:47:10 [e3ea612e] 200 0.038s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015137 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015139 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [4dd43881] GET /nodes/search
-2025-11-21 17:47:10 [d72430f6] GET /nodes/search
-2025-11-21 17:47:10 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015139 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [4dd43881] 200 0.064s
-2025-11-21 17:47:10 [d72430f6] 200 0.030s
-2025-11-21 17:47:10 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=440015043 HTTP/1.1" 200 OK
-2025-11-21 17:47:10 [b6fbf393] GET /nodes/search
-2025-11-21 17:47:10 [8a06638b] GET /nodes/search
-2025-11-21 17:47:10 [b6fbf393] 200 0.030s
-2025-11-21 17:47:11 [8a06638b] 200 0.035s
-2025-11-21 17:47:11 INFO:     172.18.0.1:48588 - "GET /nodes/search?q=18850 HTTP/1.1" 200 OK
-2025-11-21 17:47:11 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=440015043 HTTP/1.1" 200 OK
-2025-11-21 17:47:11 [ca1ab727] GET /nodes/search
-2025-11-21 17:47:11 [ca1ab727] 200 0.035s
-2025-11-21 17:47:11 INFO:     172.18.0.1:55406 - "GET /nodes/search?q=18850 HTTP/1.1" 200 OK
-2025-11-21 17:47:21 [2beb2d4a] GET /nodes/search
-2025-11-21 17:47:21 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=C HTTP/1.1" 200 OK
-2025-11-21 17:47:21 [2beb2d4a] 200 0.040s
-2025-11-21 17:47:22 [cad00ac3] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [cad00ac3] 200 0.030s
-2025-11-21 17:47:22 [b1af11cd] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Ci HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [b1af11cd] 200 0.035s
-2025-11-21 17:47:22 [2e79413c] GET /nodes/search
-2025-11-21 17:47:22 [2e79413c] 200 0.046s
-2025-11-21 17:47:22 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [cec40869] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cid HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [cec40869] 200 0.036s
-2025-11-21 17:47:22 [781eaad6] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [781eaad6] 200 0.033s
-2025-11-21 17:47:22 [3b116a33] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Cida HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [3b116a33] 200 0.039s
-2025-11-21 17:47:22 [6c4ac05b] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [6c4ac05b] 200 0.035s
-2025-11-21 17:47:22 [97f6a624] GET /nodes/search
-2025-11-21 17:47:22 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidad HTTP/1.1" 200 OK
-2025-11-21 17:47:22 [97f6a624] 200 0.033s
-2025-11-21 17:47:23 [56fe50ee] GET /nodes/search
-2025-11-21 17:47:23 [56fe50ee] 200 0.032s
-2025-11-21 17:47:23 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [09aa163c] GET /nodes/search
-2025-11-21 17:47:25 [47b8eb1d] GET /nodes/search
-2025-11-21 17:47:25 [09aa163c] 200 0.031s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:25 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=R HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [47b8eb1d] 200 0.039s
-2025-11-21 17:47:25 [8dbd838b] GET /nodes/search
-2025-11-21 17:47:25 [e90b62e2] GET /nodes/search
-2025-11-21 17:47:25 [8dbd838b] 200 0.035s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Re HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [e90b62e2] 200 0.032s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [430e8650] GET /nodes/search
-2025-11-21 17:47:25 INFO:     172.18.0.1:55948 - "GET /nodes/search?q=Re HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [430e8650] 200 0.032s
-2025-11-21 17:47:25 [775787d1] GET /nodes/search
-2025-11-21 17:47:25 [1b902a42] GET /nodes/search
-2025-11-21 17:47:25 [775787d1] 200 0.033s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55948 - "GET /nodes/search?q=Rep HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [1b902a42] 200 0.038s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [c59e2183] GET /nodes/search
-2025-11-21 17:47:25 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Rep HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [c59e2183] 200 0.036s
-2025-11-21 17:47:25 [f1c627db] GET /nodes/search
-2025-11-21 17:47:25 [41017a20] GET /nodes/search
-2025-11-21 17:47:25 [f1c627db] 200 0.034s
-2025-11-21 17:47:25 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Repl HTTP/1.1" 200 OK
-2025-11-21 17:47:25 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [41017a20] 200 0.029s
-2025-11-21 17:47:25 [3f9df7bb] GET /nodes/search
-2025-11-21 17:47:25 INFO:     172.18.0.1:55948 - "GET /nodes/search?q=Repl HTTP/1.1" 200 OK
-2025-11-21 17:47:25 [3f9df7bb] 200 0.035s
-2025-11-21 17:47:26 [a269224a] GET /nodes/search
-2025-11-21 17:47:26 [b9798dbe] GET /nodes/search
-2025-11-21 17:47:26 [a269224a] 200 0.031s
-2025-11-21 17:47:26 INFO:     172.18.0.1:55948 - "GET /nodes/search?q=Rep HTTP/1.1" 200 OK
-2025-11-21 17:47:26 [b9798dbe] 200 0.042s
-2025-11-21 17:47:26 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:26 [57f43f5b] GET /nodes/search
-2025-11-21 17:47:26 [57f43f5b] 200 0.036s
-2025-11-21 17:47:26 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Rep HTTP/1.1" 200 OK
-2025-11-21 17:47:27 [5d096e40] GET /nodes/search
-2025-11-21 17:47:27 [433084a1] GET /nodes/search
-2025-11-21 17:47:27 [5d096e40] 200 0.093s
-2025-11-21 17:47:27 [433084a1] 200 0.043s
-2025-11-21 17:47:27 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=Cidade+Jardim HTTP/1.1" 200 OK
-2025-11-21 17:47:27 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=Rep%C3%BAblica HTTP/1.1" 200 OK
-2025-11-21 17:47:28 [7e1e6e37] POST /alternatives
-2025-11-21 17:47:28 [ALTERNATIVES] Requisição recebida: from=18913, to=18866, perfil=padrao, k=3
-2025-11-21 17:47:28 [ALTERNATIVES] Buscando nós: from_id='18913' -> índice=61, to_id='18866' -> índice=18
-2025-11-21 17:47:28 [ALTERNATIVES] Índice 61 corresponde ao ID: '18913' (esperado: '18913')
-2025-11-21 17:47:28 [ALTERNATIVES] Índice 18 corresponde ao ID: '18866' (esperado: '18866')
-2025-11-21 17:47:28 [ALTERNATIVES] Índices encontrados: origem=61, destino=18
-2025-11-21 17:47:28 [ALTERNATIVES] Calculando 3 rotas alternativas...
-2025-11-21 17:47:28 [ALTERNATIVES] Parâmetros: alpha=6.0, beta=2.0, gamma=1.0, delta=4.0
-2025-11-21 17:47:28 [ALTERNATIVES] Algoritmo executado em 0.006s
-2025-11-21 17:47:28 [ALTERNATIVES] Algoritmo retornou 3 rotas
-2025-11-21 17:47:28 [ALTERNATIVES] 3 rotas alternativas calculadas
-2025-11-21 17:47:28 [7e1e6e37] 200 0.061s
-2025-11-21 17:47:28 INFO:     172.18.0.1:55856 - "POST /alternatives HTTP/1.1" 200 OK
-2025-11-21 17:47:29 [25e33404] POST /route/details
-2025-11-21 17:47:29 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:29 Traceback (most recent call last):
-2025-11-21 17:47:29   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:47:29     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:47:29               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:47:29 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:29 
-2025-11-21 17:47:29 [53b3eafb] POST /route/details
-2025-11-21 17:47:29 [25e33404] 500 0.014s
-2025-11-21 17:47:29 INFO:     172.18.0.1:55856 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:47:29 Erro ao obter detalhes da rota: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:29 Traceback (most recent call last):
-2025-11-21 17:47:29   File "/app/api/app/main.py", line 791, in get_route_details
-2025-11-21 17:47:29     details = get_route_details(path, cost, edges_df, nodes_df, request.perfil)
-2025-11-21 17:47:29               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2025-11-21 17:47:29 TypeError: get_route_details() takes 1 positional argument but 5 were given
-2025-11-21 17:47:29 
-2025-11-21 17:47:29 [21195672] GET /nodes/search
-2025-11-21 17:47:29 [53b3eafb] 500 0.027s
-2025-11-21 17:47:29 INFO:     172.18.0.1:55862 - "POST /route/details HTTP/1.1" 500 Internal Server Error
-2025-11-21 17:47:29 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=18913 HTTP/1.1" 200 OK
-2025-11-21 17:47:29 [21195672] 200 0.046s
-2025-11-21 17:47:29 [599f5731] GET /nodes/search
-2025-11-21 17:47:29 [6a65b7e4] GET /nodes/search
-2025-11-21 17:47:29 [599f5731] 200 0.043s
-2025-11-21 17:47:29 [6a65b7e4] 200 0.033s
-2025-11-21 17:47:29 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=18913 HTTP/1.1" 200 OK
-2025-11-21 17:47:29 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=630015451 HTTP/1.1" 200 OK
-2025-11-21 17:47:29 [139e35f4] GET /nodes/search
-2025-11-21 17:47:30 [55378eed] GET /nodes/search
-2025-11-21 17:47:30 [139e35f4] 200 0.051s
-2025-11-21 17:47:30 [55378eed] 200 0.033s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=630015451 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=630015449 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [1f5a60ec] GET /nodes/search
-2025-11-21 17:47:30 [3876b456] GET /nodes/search
-2025-11-21 17:47:30 [1f5a60ec] 200 0.031s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=630015449 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [3876b456] 200 0.040s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=3406544 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [882670a1] GET /nodes/search
-2025-11-21 17:47:30 [66b9b33d] GET /nodes/search
-2025-11-21 17:47:30 [882670a1] 200 0.032s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=3406544 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [66b9b33d] 200 0.030s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=630015115 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [60519aae] GET /nodes/search
-2025-11-21 17:47:30 [e4fad856] GET /nodes/search
-2025-11-21 17:47:30 [60519aae] 200 0.032s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=630015115 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=630015114 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [e4fad856] 200 0.031s
-2025-11-21 17:47:30 [9f162fea] GET /nodes/search
-2025-11-21 17:47:30 [432e3397] GET /nodes/search
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=630015114 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=3407077 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [9f162fea] 200 0.088s
-2025-11-21 17:47:30 [432e3397] 200 0.050s
-2025-11-21 17:47:30 [e577e1f3] GET /nodes/search
-2025-11-21 17:47:30 [1a20a3ed] GET /nodes/search
-2025-11-21 17:47:30 [e577e1f3] 200 0.039s
-2025-11-21 17:47:30 [1a20a3ed] 200 0.033s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=3407077 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=3407076 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [cd461f46] GET /nodes/search
-2025-11-21 17:47:30 [80e7c44d] GET /nodes/search
-2025-11-21 17:47:30 [cd461f46] 200 0.033s
-2025-11-21 17:47:30 [80e7c44d] 200 0.032s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=3407076 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=440015164 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [a4221f4c] GET /nodes/search
-2025-11-21 17:47:30 [0a432ea9] GET /nodes/search
-2025-11-21 17:47:30 [a4221f4c] 200 0.084s
-2025-11-21 17:47:30 [0a432ea9] 200 0.051s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=440015164 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=440015158 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [8b70ea2d] GET /nodes/search
-2025-11-21 17:47:30 [7d9a9e1e] GET /nodes/search
-2025-11-21 17:47:30 [8b70ea2d] 200 0.083s
-2025-11-21 17:47:30 [7d9a9e1e] 200 0.040s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=440015158 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=440015161 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [c4ada7a1] GET /nodes/search
-2025-11-21 17:47:30 [689cd73d] GET /nodes/search
-2025-11-21 17:47:30 [c4ada7a1] 200 0.039s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=440015161 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [689cd73d] 200 0.036s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=70016561 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [39e8e4c9] GET /nodes/search
-2025-11-21 17:47:30 [221516fd] GET /nodes/search
-2025-11-21 17:47:30 [39e8e4c9] 200 0.039s
-2025-11-21 17:47:30 [221516fd] 200 0.052s
-2025-11-21 17:47:30 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=70016561 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=706325 HTTP/1.1" 200 OK
-2025-11-21 17:47:30 [2bc9fdab] GET /nodes/search
-2025-11-21 17:47:30 [f7ac0c89] GET /nodes/search
-2025-11-21 17:47:30 [2bc9fdab] 200 0.042s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=706325 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [f7ac0c89] 200 0.038s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=670016557 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [ae0f7bc9] GET /nodes/search
-2025-11-21 17:47:31 [7a0f2672] GET /nodes/search
-2025-11-21 17:47:31 [ae0f7bc9] 200 0.099s
-2025-11-21 17:47:31 [7a0f2672] 200 0.046s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=670016557 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=6714452 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [97db1c26] GET /nodes/search
-2025-11-21 17:47:31 [0a21c051] GET /nodes/search
-2025-11-21 17:47:31 [97db1c26] 200 0.070s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=6714452 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [0a21c051] 200 0.067s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=670012731 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [df16afab] GET /nodes/search
-2025-11-21 17:47:31 [c73cc1bd] GET /nodes/search
-2025-11-21 17:47:31 [df16afab] 200 0.060s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=670012731 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=670009789 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [c73cc1bd] 200 0.039s
-2025-11-21 17:47:31 [4c159ad1] GET /nodes/search
-2025-11-21 17:47:31 [d7a51cb6] GET /nodes/search
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=670009789 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [4c159ad1] 200 0.062s
-2025-11-21 17:47:31 [d7a51cb6] 200 0.030s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=6700283 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [44a66126] GET /nodes/search
-2025-11-21 17:47:31 [f8a6e18d] GET /nodes/search
-2025-11-21 17:47:31 [44a66126] 200 0.080s
-2025-11-21 17:47:31 [f8a6e18d] 200 0.048s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55856 - "GET /nodes/search?q=6700283 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=18866 HTTP/1.1" 200 OK
-2025-11-21 17:47:31 [08e738a3] GET /nodes/search
-2025-11-21 17:47:31 [08e738a3] 200 0.053s
-2025-11-21 17:47:31 INFO:     172.18.0.1:55862 - "GET /nodes/search?q=18866 HTTP/1.1" 200 OK
+2025-11-22 13:07:46 [BOOT] CSV paths -> NODES=/app/data/nodes.csv EDGES=/app/data/edges.csv
+2025-11-22 13:07:46 [BOOT] DATA_DIR=/app/data
+2025-11-22 13:07:46 [BOOT] NODES existe: True
+2025-11-22 13:07:46 [BOOT] EDGES existe: True
+2025-11-22 13:07:46 [BOOT] 📁 Diretório GTFS encontrado: GTFS
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 1000/22056 nós processados, 1000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 2000/22056 nós processados, 2000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 3000/22056 nós processados, 3000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 4000/22056 nós processados, 4000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:46 🔐 Tentando autenticar na API Olho Vivo
+2025-11-22 13:07:46    URL: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar
+2025-11-22 13:07:46    Token (primeiros 20 chars): 1abf7ba19b22829e9d95...
+2025-11-22 13:07:46    Token completo (últimos 10 chars): ...cb5d63be81
+2025-11-22 13:07:46    Token length: 64
+2025-11-22 13:07:46    Token repr: '1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81'
+2025-11-22 13:07:46    Tentando método 1: POST com token na query string
+2025-11-22 13:07:46    URL completa: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
+2025-11-22 13:07:46    Headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/'}
+2025-11-22 13:07:46    Status code: 200
+2025-11-22 13:07:46    Response text: true
+2025-11-22 13:07:46    Response headers: {'Date': 'Sat, 22 Nov 2025 16:07:46 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '4', 'Connection': 'keep-alive', 'CF-RAY': '9a29ae8509c8c93d-GRU', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '-1', 'X-AspNet-Version': '4.0.30319', 'Set-Cookie': 'apiCredentials=E0A4395351BC4F4455E80330BAD7D5E9EB651109EF24961848033F0E7DE1D91D1452E462B5656C57C6E217EA01C848CA40391B3CED8195EDDC5E6B4272500A7B95AA9AA6ECB15179E52A2E1B56CA95F302AB3718182D76520DA7F75D919490916ED8D389536A02401F67D6470B00DB9C3E9FE0150ADCF6C851E08BCD05B888FC2EA4B5A0E837FBE58757CBDA086E5FA5D7B203DA94161B4F24AA82B9F12F45C39D1AF983AC4C991D61FF55F215BE675D0C33C2ACFC6079CC5F9C88AA5F16D9814B57FFB2; path=/; HttpOnly; SameSite=Lax', 'cf-cache-status': 'DYNAMIC', 'Server': 'cloudflare', 'alt-svc': 'h3=":443"; ma=86400'}
+2025-11-22 13:07:46    Request URL final: https://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=1abf7ba19b22829e9d95648f8affe9afaf8c64b9cbb8c8042e6b50cb5d63be81
+2025-11-22 13:07:46    Request headers enviados: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Origin': 'https://www.sptrans.com.br', 'Referer': 'https://www.sptrans.com.br/desenvolvedores/', 'Content-Length': '0'}
+2025-11-22 13:07:46    Response JSON: True (tipo: bool)
+2025-11-22 13:07:46 ✅ Autenticação na API Olho Vivo bem-sucedida
+2025-11-22 13:07:46 ✅ API Olho Vivo disponível
+2025-11-22 13:07:46 📁 Diretório GTFS encontrado: GTFS
+2025-11-22 13:07:46 ✅ GTFS local disponível: GTFS
+2025-11-22 13:07:46 📊 Status das fontes de dados: {'olho_vivo': True, 'gtfs_local': True, 'osm': False}
+2025-11-22 13:07:46 📁 Carregando estrutura do grafo do GTFS local...
+2025-11-22 13:07:46 Processando arquivos GTFS do diretório: GTFS
+2025-11-22 13:07:47 Carregadas 22056 paradas
+2025-11-22 13:07:47 Carregadas 1344 rotas
+2025-11-22 13:07:47 Carregadas 2251 viagens
+2025-11-22 13:07:47 Carregados 10000 horários de parada
+2025-11-22 13:07:47 ✅ Arquivos GTFS processados: 22056 paradas, 1344 rotas, 2251 viagens
+2025-11-22 13:07:47 Criando conexões de caminhada (máx 1000m, 10 por nó)...
+2025-11-22 13:07:47 Índice espacial criado: 1186 células, 22056 nós
+2025-11-22 13:07:53 ✅ Criadas 234782 conexões de caminhada
+2025-11-22 13:07:53 Adicionadas 234782 conexões de caminhada (bidirecionais)
+2025-11-22 13:07:53 Convertidos 22056 nós e 244547 arestas (incluindo caminhada)
+2025-11-22 13:07:53 ✅ 22056 nós carregados do GTFS local
+2025-11-22 13:07:53 ✅ 244547 arestas carregadas do GTFS local (incluindo caminhada)
+2025-11-22 13:07:53 ✅ API Olho Vivo disponível para dados em tempo real (posição de veículos, previsões)
+2025-11-22 13:07:54 ✅ Dados exportados: /app/data/hybrid/nodes.csv, /app/data/hybrid/edges.csv
+2025-11-22 13:07:59 ✅ Engine inicializado com dados híbridos (estratégia: hybrid)
+2025-11-22 13:07:59    - API Olho Vivo: ✅
+2025-11-22 13:07:59    - GTFS Local: ✅
+2025-11-22 13:07:59 ✅ Engine inicializado com sucesso!
+2025-11-22 13:08:18 Dados do grafo carregados: 22056 nós, 244547 arestas (índices: True, True)
+2025-11-22 13:08:18 ✅ Dados do grafo carregados para utilitários (dados híbridos - API Olho Vivo + GTFS)
+2025-11-22 13:08:18 INFO:     Started server process [1]
+2025-11-22 13:08:18 INFO:     Waiting for application startup.
+2025-11-22 13:08:18 INFO:     Application startup complete.
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 5000/22056 nós processados, 5000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Progresso: 5000/22056 nós processados, 5000 inseridos no índice (100.0%)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 6000/22056 nós processados, 6000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 7000/22056 nós processados, 7000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 8000/22056 nós processados, 8000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 9000/22056 nós processados, 9000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 10000/22056 nós processados, 10000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Progresso: 10000/22056 nós processados, 10000 inseridos no índice (100.0%)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 11000/22056 nós processados, 11000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 12000/22056 nós processados, 12000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 13000/22056 nós processados, 13000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:55 [GRAPH] Checkpoint: 14000/22056 nós processados, 14000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 15000/22056 nós processados, 15000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Progresso: 15000/22056 nós processados, 15000 inseridos no índice (100.0%)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 16000/22056 nós processados, 16000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 17000/22056 nós processados, 17000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 18000/22056 nós processados, 18000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 19000/22056 nós processados, 19000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 20000/22056 nós processados, 20000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Progresso: 20000/22056 nós processados, 20000 inseridos no índice (100.0%)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 21000/22056 nós processados, 21000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Checkpoint: 22000/22056 nós processados, 22000 inseridos no índice (100.0%, inseriu: SIM)
+2025-11-22 13:07:56 [GRAPH] Carregamento concluído: 22056 nós processados, 22056 inseridos no índice
+2025-11-22 13:07:56 [GRAPH] ✅ Índice hash populado: 22056/22056 nós (100%)
+2025-11-22 13:07:59 [GRAPH] Arestas carregadas: 244547, ignoradas: 0 (total no CSV: ~244547)
+2025-11-22 13:07:59 [GRAPH] Debug: No 18856 (indice 8) tem 13 arestas
+2025-11-22 13:11:03 INFO:     172.18.0.1:43014 - "GET /health HTTP/1.1" 200 OK
+2025-11-22 13:11:05 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=S HTTP/1.1" 200 OK
+2025-11-22 13:11:09 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Sa HTTP/1.1" 200 OK
+2025-11-22 13:11:09 INFO:     172.18.0.1:43028 - "GET /nodes/search?q=Sas HTTP/1.1" 200 OK
+2025-11-22 13:11:09 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Sas HTTP/1.1" 200 OK
+2025-11-22 13:11:09 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Sa HTTP/1.1" 200 OK
+2025-11-22 13:11:10 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Sa HTTP/1.1" 200 OK
+2025-11-22 13:11:10 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Sa HTTP/1.1" 200 OK
+2025-11-22 13:11:10 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=San HTTP/1.1" 200 OK
+2025-11-22 13:11:10 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=San HTTP/1.1" 200 OK
+2025-11-22 13:11:11 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Sany HTTP/1.1" 200 OK
+2025-11-22 13:11:11 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Sany HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=San HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=San HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Sant HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Sant HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Santa HTTP/1.1" 200 OK
+2025-11-22 13:11:12 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santa HTTP/1.1" 200 OK
+2025-11-22 13:11:14 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:15 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=H HTTP/1.1" 200 OK
+2025-11-22 13:11:15 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hi HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hi HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hij HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hij HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hiji HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hiji HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hij HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:16 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hij HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hi HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hi HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Hig HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:17 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Hig HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Higi HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Higi HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43054 - "GET /nodes/search?q=Higie HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:18 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Higie HTTP/1.1" 200 OK
+2025-11-22 13:11:19 INFO:     172.18.0.1:43042 - "GET /nodes/search?q=Higien%C3%B3polis-mackenzie HTTP/1.1" 200 OK
+2025-11-22 13:11:19 INFO:     172.18.0.1:43014 - "GET /nodes/search?q=Santana HTTP/1.1" 200 OK
+2025-11-22 13:11:22 INFO:     172.18.0.1:43042 - "OPTIONS /alternatives HTTP/1.1" 200 OK
+2025-11-22 13:11:22 INFO:     172.18.0.1:43042 - "POST /alternatives HTTP/1.1" 200 OK
+2025-11-22 13:11:26 INFO:     172.18.0.1:43042 - "OPTIONS /route/details HTTP/1.1" 200 OK
+2025-11-22 13:11:26 INFO:     172.18.0.1:43042 - "POST /route/details HTTP/1.1" 200 OK
+2025-11-22 13:11:26 INFO:     172.18.0.1:51838 - "OPTIONS /route/details HTTP/1.1" 200 OK
+2025-11-22 13:11:26 INFO:     172.18.0.1:51838 - "POST /route/details HTTP/1.1" 200 OK
+2025-11-22 13:11:29 INFO:     172.18.0.1:51838 - "POST /route/details HTTP/1.1" 200 OK
+2025-11-22 13:11:29 INFO:     172.18.0.1:43042 - "POST /route/details HTTP/1.1" 200 OK
+2025-11-22 13:08:18 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+2025-11-22 13:11:03 [39edbae2] GET /health
+2025-11-22 13:11:03 [39edbae2] 200 0.002s
+2025-11-22 13:11:05 [332e1cdc] GET /nodes/search
+2025-11-22 13:11:05 [332e1cdc] 200 0.043s
+2025-11-22 13:11:09 [a39672c2] GET /nodes/search
+2025-11-22 13:11:09 [a39672c2] 200 0.039s
+2025-11-22 13:11:09 [763531c5] GET /nodes/search
+2025-11-22 13:11:09 [763531c5] 200 0.032s
+2025-11-22 13:11:09 [1d8adee9] GET /nodes/search
+2025-11-22 13:11:09 [1d8adee9] 200 0.035s
+2025-11-22 13:11:09 [d4fa4c1b] GET /nodes/search
+2025-11-22 13:11:09 [d4fa4c1b] 200 0.034s
+2025-11-22 13:11:10 [ea031e7b] GET /nodes/search
+2025-11-22 13:11:10 [ea031e7b] 200 0.032s
+2025-11-22 13:11:10 [c4f65846] GET /nodes/search
+2025-11-22 13:11:10 [c4f65846] 200 0.061s
+2025-11-22 13:11:10 [010af738] GET /nodes/search
+2025-11-22 13:11:10 [010af738] 200 0.036s
+2025-11-22 13:11:10 [d01e72b8] GET /nodes/search
+2025-11-22 13:11:10 [d01e72b8] 200 0.035s
+2025-11-22 13:11:11 [3d9cef35] GET /nodes/search
+2025-11-22 13:11:11 [3d9cef35] 200 0.031s
+2025-11-22 13:11:11 [fcddc08b] GET /nodes/search
+2025-11-22 13:11:11 [fcddc08b] 200 0.032s
+2025-11-22 13:11:12 [bc832c20] GET /nodes/search
+2025-11-22 13:11:12 [bc832c20] 200 0.031s
+2025-11-22 13:11:12 [cac27ee1] GET /nodes/search
+2025-11-22 13:11:12 [cac27ee1] 200 0.034s
+2025-11-22 13:11:12 [c425345e] GET /nodes/search
+2025-11-22 13:11:12 [c425345e] 200 0.044s
+2025-11-22 13:11:12 [e9544901] GET /nodes/search
+2025-11-22 13:11:12 [e9544901] 200 0.035s
+2025-11-22 13:11:12 [0d779c73] GET /nodes/search
+2025-11-22 13:11:12 [0d779c73] 200 0.030s
+2025-11-22 13:11:12 [d9743b75] GET /nodes/search
+2025-11-22 13:11:12 [d9743b75] 200 0.032s
+2025-11-22 13:11:14 [3e00065e] GET /nodes/search
+2025-11-22 13:11:14 [3e00065e] 200 0.033s
+2025-11-22 13:11:15 [80b1be74] GET /nodes/search
+2025-11-22 13:11:15 [e977482f] GET /nodes/search
+2025-11-22 13:11:15 [80b1be74] 200 0.067s
+2025-11-22 13:11:15 [e977482f] 200 0.066s
+2025-11-22 13:11:16 [2b04776b] GET /nodes/search
+2025-11-22 13:11:16 [7b651751] GET /nodes/search
+2025-11-22 13:11:16 [2b04776b] 200 0.033s
+2025-11-22 13:11:16 [7b651751] 200 0.044s
+2025-11-22 13:11:16 [79013dd4] GET /nodes/search
+2025-11-22 13:11:16 [79013dd4] 200 0.033s
+2025-11-22 13:11:16 [879bcef2] GET /nodes/search
+2025-11-22 13:11:16 [a8e40124] GET /nodes/search
+2025-11-22 13:11:16 [879bcef2] 200 0.030s
+2025-11-22 13:11:16 [a8e40124] 200 0.035s
+2025-11-22 13:11:16 [8eedc395] GET /nodes/search
+2025-11-22 13:11:16 [8eedc395] 200 0.032s
+2025-11-22 13:11:16 [70334bc1] GET /nodes/search
+2025-11-22 13:11:16 [99b33d26] GET /nodes/search
+2025-11-22 13:11:16 [70334bc1] 200 0.030s
+2025-11-22 13:11:16 [99b33d26] 200 0.030s
+2025-11-22 13:11:16 [26d14c65] GET /nodes/search
+2025-11-22 13:11:16 [26d14c65] 200 0.032s
+2025-11-22 13:11:16 [6c4de460] GET /nodes/search
+2025-11-22 13:11:16 [7b28180f] GET /nodes/search
+2025-11-22 13:11:16 [6c4de460] 200 0.030s
+2025-11-22 13:11:16 [7b28180f] 200 0.035s
+2025-11-22 13:11:16 [ddb07027] GET /nodes/search
+2025-11-22 13:11:16 [ddb07027] 200 0.029s
+2025-11-22 13:11:17 [561441bd] GET /nodes/search
+2025-11-22 13:11:17 [8e57f69a] GET /nodes/search
+2025-11-22 13:11:17 [561441bd] 200 0.038s
+2025-11-22 13:11:17 [8e57f69a] 200 0.029s
+2025-11-22 13:11:17 [7ba2f305] GET /nodes/search
+2025-11-22 13:11:17 [7ba2f305] 200 0.032s
+2025-11-22 13:11:17 [1b4e6543] GET /nodes/search
+2025-11-22 13:11:17 [152f609b] GET /nodes/search
+2025-11-22 13:11:17 [1b4e6543] 200 0.031s
+2025-11-22 13:11:17 [152f609b] 200 0.036s
+2025-11-22 13:11:17 [ee81f409] GET /nodes/search
+2025-11-22 13:11:17 [ee81f409] 200 0.031s
+2025-11-22 13:11:17 [9c1d07c0] GET /nodes/search
+2025-11-22 13:11:18 [0542650f] GET /nodes/search
+2025-11-22 13:11:18 [9c1d07c0] 200 0.031s
+2025-11-22 13:11:18 [0542650f] 200 0.031s
+2025-11-22 13:11:18 [7f46eea7] GET /nodes/search
+2025-11-22 13:11:18 [7f46eea7] 200 0.031s
+2025-11-22 13:11:18 [f8e94b37] GET /nodes/search
+2025-11-22 13:11:18 [423e3af7] GET /nodes/search
+2025-11-22 13:11:18 [f8e94b37] 200 0.031s
+2025-11-22 13:11:18 [423e3af7] 200 0.038s
+2025-11-22 13:11:18 [14e7eaf7] GET /nodes/search
+2025-11-22 13:11:18 [14e7eaf7] 200 0.031s
+2025-11-22 13:11:19 [59e55f09] GET /nodes/search
+2025-11-22 13:11:19 [53d5004b] GET /nodes/search
+2025-11-22 13:11:19 [59e55f09] 200 0.070s
+2025-11-22 13:11:19 [53d5004b] 200 0.070s
+2025-11-22 13:11:22 [562db991] OPTIONS /alternatives
+2025-11-22 13:11:22 [562db991] 200 0.000s
+2025-11-22 13:11:22 [dcf42af3] POST /alternatives
+2025-11-22 13:11:22 [ALTERNATIVES] Requisição recebida: from=18879, to=4406630, perfil=padrao, k=3
+2025-11-22 13:11:22 [ALTERNATIVES] Buscando nós: from_id='18879' -> índice=31, to_id='4406630' -> índice=3847
+2025-11-22 13:11:22 [ALTERNATIVES] Índice 31 corresponde ao ID: '18879' (esperado: '18879')
+2025-11-22 13:11:22 [ALTERNATIVES] Índice 3847 corresponde ao ID: '4406630' (esperado: '4406630')
+2025-11-22 13:11:22 [ALTERNATIVES] Índices encontrados: origem=31, destino=3847
+2025-11-22 13:11:22 [ALTERNATIVES] Calculando 3 rotas alternativas...
+2025-11-22 13:11:22 [ALTERNATIVES] Parâmetros: alpha=6.0, beta=2.0, gamma=1.0, delta=4.0
+2025-11-22 13:11:22 [ALTERNATIVES] Algoritmo executado em 0.010s
+2025-11-22 13:11:22 [ALTERNATIVES] Algoritmo retornou 3 rotas
+2025-11-22 13:11:22 [ALTERNATIVES] 3 rotas alternativas calculadas
+2025-11-22 13:11:22 [dcf42af3] 200 0.018s
+2025-11-22 13:11:26 [71533b2b] OPTIONS /route/details
+2025-11-22 13:11:26 [71533b2b] 200 0.001s
+2025-11-22 13:11:26 [92be6fab] POST /route/details
+2025-11-22 13:11:26 [92be6fab] 200 0.014s
+2025-11-22 13:11:26 [ecefcf13] OPTIONS /route/details
+2025-11-22 13:11:26 [ecefcf13] 200 0.002s
+2025-11-22 13:11:26 [2595dacd] POST /route/details
+2025-11-22 13:11:26 [2595dacd] 200 0.012s
+2025-11-22 13:11:29 [a81e4202] POST /route/details
+2025-11-22 13:11:29 [59ff2b5e] POST /route/details
+2025-11-22 13:11:29 [a81e4202] 200 0.014s
+2025-11-22 13:11:29 [59ff2b5e] 200 0.018s

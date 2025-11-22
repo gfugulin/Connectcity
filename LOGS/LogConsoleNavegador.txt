@@ -1,54 +1,241 @@
-api.js:142 Erro ao obter detalhes da rota: 
-AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
-getRouteDetails	@	api.js:142
-await in getRouteDetails		
-fetchDetails	@	RouteDetail.jsx:34
-(anônimo)	@	RouteDetail.jsx:46
-RouteDetail.jsx:40 Erro ao buscar detalhes: 
-AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
-fetchDetails	@	RouteDetail.jsx:40
-await in fetchDetails		
-(anônimo)	@	RouteDetail.jsx:46
-api.js:139 
- POST http://localhost:8080/route/details 500 (Internal Server Error)
-getRouteDetails	@	api.js:139
-fetchDetails	@	RouteDetail.jsx:34
-(anônimo)	@	RouteDetail.jsx:46
-api.js:142 Erro ao obter detalhes da rota: 
-AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
-getRouteDetails	@	api.js:142
-await in getRouteDetails		
-fetchDetails	@	RouteDetail.jsx:34
-(anônimo)	@	RouteDetail.jsx:46
-RouteDetail.jsx:40 Erro ao buscar detalhes: 
-AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
-code
-: 
-"ERR_BAD_RESPONSE"
-config
-: 
-{transitional: {…}, adapter: Array(3), transformRequest: Array(1), transformResponse: Array(1), timeout: 0, …}
-message
-: 
-"Request failed with status code 500"
-name
-: 
-"AxiosError"
-request
-: 
-XMLHttpRequest {onreadystatechange: null, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}
-response
-: 
-{data: {…}, status: 500, statusText: 'Internal Server Error', headers: AxiosHeaders, config: {…}, …}
-status
-: 
-500
-stack
-: 
-"AxiosError: Request failed with status code 500\n    at settle (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:1257:12)\n    at XMLHttpRequest.onloadend (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:1606:7)\n    at Axios.request (http://localhost:5173/node_modules/.vite/deps/axios.js?v=9f5c62a4:2223:41)\n    at async Object.getRouteDetails (http://localhost:5173/src/services/api.js:139:19)\n    at async fetchDetails (http://localhost:5173/src/pages/RouteDetail.jsx:46:30)"
-[[Prototype]]
-: 
-Error
-fetchDetails	@	RouteDetail.jsx:40
-await in fetchDetails		
-(anônimo)	@	RouteDetail.jsx:46
+✅ API conectada: {status: 'healthy', timestamp: 1763827863.6515121, engine_loaded: true, version: 'v1'}
+336Q5MDV.js:52 Uncaught TypeError: Cannot read properties of null (reading 'getSelection')
+    at HTMLInputElement.<anonymous> (336Q5MDV.js:52:27619)
+    at k (JDSHOLU5.js:1:4766)
+    at S (JDSHOLU5.js:1:5056)
+    at E (JDSHOLU5.js:1:4995)
+(anônimo) @ 336Q5MDV.js:52
+k @ JDSHOLU5.js:1
+S @ JDSHOLU5.js:1
+E @ JDSHOLU5.js:1
+setTimeout
+m @ JDSHOLU5.js:1
+C @ JDSHOLU5.js:1Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:16670 Uncaught TypeError: options.icon.createIcon is not a function
+    at NewClass._initIcon (chunk-NB5MQSEJ.js?v=9f5c62a4:5081:36)
+    at NewClass.onAdd (chunk-NB5MQSEJ.js?v=9f5c62a4:5011:16)
+    at NewClass._layerAdd (chunk-NB5MQSEJ.js?v=9f5c62a4:4454:16)
+    at NewClass.whenReady (chunk-NB5MQSEJ.js?v=9f5c62a4:2981:22)
+    at NewClass.addLayer (chunk-NB5MQSEJ.js?v=9f5c62a4:4475:16)
+    at addLayer (react-leaflet.js?v=9f5c62a4:237:15)
+    at commitHookEffectListMount (chunk-PJEEZAML.js?v=9f5c62a4:16915:34)
+    at commitPassiveMountOnFiber (chunk-PJEEZAML.js?v=9f5c62a4:18156:19)
+    at commitPassiveMountEffects_complete (chunk-PJEEZAML.js?v=9f5c62a4:18129:17)
+    at commitPassiveMountEffects_begin (chunk-PJEEZAML.js?v=9f5c62a4:18119:15)
+_initIcon @ chunk-NB5MQSEJ.js?v=9f5c62a4:5081
+onAdd @ chunk-NB5MQSEJ.js?v=9f5c62a4:5011
+_layerAdd @ chunk-NB5MQSEJ.js?v=9f5c62a4:4454
+whenReady @ chunk-NB5MQSEJ.js?v=9f5c62a4:2981
+addLayer @ chunk-NB5MQSEJ.js?v=9f5c62a4:4475
+addLayer @ react-leaflet.js?v=9f5c62a4:237
+commitHookEffectListMount @ chunk-PJEEZAML.js?v=9f5c62a4:16915
+commitPassiveMountOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:18156
+commitPassiveMountEffects_complete @ chunk-PJEEZAML.js?v=9f5c62a4:18129
+commitPassiveMountEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18119
+commitPassiveMountEffects @ chunk-PJEEZAML.js?v=9f5c62a4:18109
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19490
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:14032 The above error occurred in the <ForwardRef(ContainerComponent)> component:
+
+    at ContainerComponent (http://localhost:5173/node_modules/.vite/deps/react-leaflet.js?v=9f5c62a4:76:35)
+    at div
+    at MapContainerComponent (http://localhost:5173/node_modules/.vite/deps/react-leaflet.js?v=9f5c62a4:545:34)
+    at div
+    at div
+    at ActiveNavigation (http://localhost:5173/src/pages/ActiveNavigation.jsx?t=1763826755649:53:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4108:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4578:5)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4521:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:5267:5)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-PJEEZAML.js?v=9f5c62a4:14032
+update.callback @ chunk-PJEEZAML.js?v=9f5c62a4:14052
+callCallback @ chunk-PJEEZAML.js?v=9f5c62a4:11248
+commitUpdateQueue @ chunk-PJEEZAML.js?v=9f5c62a4:11265
+commitLayoutEffectOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:17093
+commitLayoutMountEffects_complete @ chunk-PJEEZAML.js?v=9f5c62a4:17980
+commitLayoutEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:17969
+commitLayoutEffects @ chunk-PJEEZAML.js?v=9f5c62a4:17920
+commitRootImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19353
+commitRoot @ chunk-PJEEZAML.js?v=9f5c62a4:19277
+performSyncWorkOnRoot @ chunk-PJEEZAML.js?v=9f5c62a4:18895
+flushSyncCallbacks @ chunk-PJEEZAML.js?v=9f5c62a4:9119
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19506
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:9129 Uncaught TypeError: options.icon.createIcon is not a function
+    at NewClass._initIcon (chunk-NB5MQSEJ.js?v=9f5c62a4:5081:36)
+    at NewClass.onAdd (chunk-NB5MQSEJ.js?v=9f5c62a4:5011:16)
+    at NewClass._layerAdd (chunk-NB5MQSEJ.js?v=9f5c62a4:4454:16)
+    at NewClass.whenReady (chunk-NB5MQSEJ.js?v=9f5c62a4:2981:22)
+    at NewClass.addLayer (chunk-NB5MQSEJ.js?v=9f5c62a4:4475:16)
+    at addLayer (react-leaflet.js?v=9f5c62a4:237:15)
+    at commitHookEffectListMount (chunk-PJEEZAML.js?v=9f5c62a4:16915:34)
+    at commitPassiveMountOnFiber (chunk-PJEEZAML.js?v=9f5c62a4:18156:19)
+    at commitPassiveMountEffects_complete (chunk-PJEEZAML.js?v=9f5c62a4:18129:17)
+    at commitPassiveMountEffects_begin (chunk-PJEEZAML.js?v=9f5c62a4:18119:15)
+_initIcon @ chunk-NB5MQSEJ.js?v=9f5c62a4:5081
+onAdd @ chunk-NB5MQSEJ.js?v=9f5c62a4:5011
+_layerAdd @ chunk-NB5MQSEJ.js?v=9f5c62a4:4454
+whenReady @ chunk-NB5MQSEJ.js?v=9f5c62a4:2981
+addLayer @ chunk-NB5MQSEJ.js?v=9f5c62a4:4475
+addLayer @ react-leaflet.js?v=9f5c62a4:237
+commitHookEffectListMount @ chunk-PJEEZAML.js?v=9f5c62a4:16915
+commitPassiveMountOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:18156
+commitPassiveMountEffects_complete @ chunk-PJEEZAML.js?v=9f5c62a4:18129
+commitPassiveMountEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18119
+commitPassiveMountEffects @ chunk-PJEEZAML.js?v=9f5c62a4:18109
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19490
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:16670 Uncaught TypeError: Cannot read properties of undefined (reading '_leaflet_events')
+    at removeOne (chunk-NB5MQSEJ.js?v=9f5c62a4:1762:26)
+    at off (chunk-NB5MQSEJ.js?v=9f5c62a4:1708:15)
+    at NewClass._removeIcon (chunk-NB5MQSEJ.js?v=9f5c62a4:5138:13)
+    at NewClass.onRemove (chunk-NB5MQSEJ.js?v=9f5c62a4:5023:16)
+    at NewClass.removeLayer (chunk-NB5MQSEJ.js?v=9f5c62a4:4486:19)
+    at NewClass.removeFrom (chunk-NB5MQSEJ.js?v=9f5c62a4:4418:17)
+    at NewClass.remove (chunk-NB5MQSEJ.js?v=9f5c62a4:4408:23)
+    at NewClass.remove (chunk-NB5MQSEJ.js?v=9f5c62a4:2498:29)
+    at react-leaflet.js?v=9f5c62a4:571:46
+    at safelyCallDestroy (chunk-PJEEZAML.js?v=9f5c62a4:16748:13)
+removeOne @ chunk-NB5MQSEJ.js?v=9f5c62a4:1762
+off @ chunk-NB5MQSEJ.js?v=9f5c62a4:1708
+_removeIcon @ chunk-NB5MQSEJ.js?v=9f5c62a4:5138
+onRemove @ chunk-NB5MQSEJ.js?v=9f5c62a4:5023
+removeLayer @ chunk-NB5MQSEJ.js?v=9f5c62a4:4486
+removeFrom @ chunk-NB5MQSEJ.js?v=9f5c62a4:4418
+remove @ chunk-NB5MQSEJ.js?v=9f5c62a4:4408
+remove @ chunk-NB5MQSEJ.js?v=9f5c62a4:2498
+(anônimo) @ react-leaflet.js?v=9f5c62a4:571
+safelyCallDestroy @ chunk-PJEEZAML.js?v=9f5c62a4:16748
+commitHookEffectListUnmount @ chunk-PJEEZAML.js?v=9f5c62a4:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18245
+commitPassiveUnmountEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18181
+commitPassiveUnmountEffects @ chunk-PJEEZAML.js?v=9f5c62a4:18169
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19489
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:16670 Uncaught TypeError: Cannot read properties of undefined (reading '_leaflet_events')
+    at removeOne (chunk-NB5MQSEJ.js?v=9f5c62a4:1762:26)
+    at off (chunk-NB5MQSEJ.js?v=9f5c62a4:1708:15)
+    at NewClass._removeIcon (chunk-NB5MQSEJ.js?v=9f5c62a4:5138:13)
+    at NewClass.onRemove (chunk-NB5MQSEJ.js?v=9f5c62a4:5023:16)
+    at NewClass.removeLayer (chunk-NB5MQSEJ.js?v=9f5c62a4:4486:19)
+    at removeLayer (react-leaflet.js?v=9f5c62a4:241:19)
+    at safelyCallDestroy (chunk-PJEEZAML.js?v=9f5c62a4:16748:13)
+    at commitHookEffectListUnmount (chunk-PJEEZAML.js?v=9f5c62a4:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-PJEEZAML.js?v=9f5c62a4:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-PJEEZAML.js?v=9f5c62a4:18245:13)
+removeOne @ chunk-NB5MQSEJ.js?v=9f5c62a4:1762
+off @ chunk-NB5MQSEJ.js?v=9f5c62a4:1708
+_removeIcon @ chunk-NB5MQSEJ.js?v=9f5c62a4:5138
+onRemove @ chunk-NB5MQSEJ.js?v=9f5c62a4:5023
+removeLayer @ chunk-NB5MQSEJ.js?v=9f5c62a4:4486
+removeLayer @ react-leaflet.js?v=9f5c62a4:241
+safelyCallDestroy @ chunk-PJEEZAML.js?v=9f5c62a4:16748
+commitHookEffectListUnmount @ chunk-PJEEZAML.js?v=9f5c62a4:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18245
+commitPassiveUnmountEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:18181
+commitPassiveUnmountEffects @ chunk-PJEEZAML.js?v=9f5c62a4:18169
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19489
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:14032 The above error occurred in the <ForwardRef(MapContainerComponent)> component:
+
+    at MapContainerComponent (http://localhost:5173/node_modules/.vite/deps/react-leaflet.js?v=9f5c62a4:545:34)
+    at div
+    at div
+    at ActiveNavigation (http://localhost:5173/src/pages/ActiveNavigation.jsx?t=1763826755649:53:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4108:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4578:5)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4521:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:5267:5)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-PJEEZAML.js?v=9f5c62a4:14032
+update.callback @ chunk-PJEEZAML.js?v=9f5c62a4:14052
+callCallback @ chunk-PJEEZAML.js?v=9f5c62a4:11248
+commitUpdateQueue @ chunk-PJEEZAML.js?v=9f5c62a4:11265
+commitLayoutEffectOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:17093
+commitLayoutMountEffects_complete @ chunk-PJEEZAML.js?v=9f5c62a4:17980
+commitLayoutEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:17969
+commitLayoutEffects @ chunk-PJEEZAML.js?v=9f5c62a4:17920
+commitRootImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19353
+commitRoot @ chunk-PJEEZAML.js?v=9f5c62a4:19277
+performSyncWorkOnRoot @ chunk-PJEEZAML.js?v=9f5c62a4:18895
+flushSyncCallbacks @ chunk-PJEEZAML.js?v=9f5c62a4:9119
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19506
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:14032 The above error occurred in the <ForwardRef(ContainerComponent)> component:
+
+    at ContainerComponent (http://localhost:5173/node_modules/.vite/deps/react-leaflet.js?v=9f5c62a4:76:35)
+    at div
+    at MapContainerComponent (http://localhost:5173/node_modules/.vite/deps/react-leaflet.js?v=9f5c62a4:545:34)
+    at div
+    at div
+    at ActiveNavigation (http://localhost:5173/src/pages/ActiveNavigation.jsx?t=1763826755649:53:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4108:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4578:5)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:4521:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=9f5c62a4:5267:5)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-PJEEZAML.js?v=9f5c62a4:14032
+update.callback @ chunk-PJEEZAML.js?v=9f5c62a4:14052
+callCallback @ chunk-PJEEZAML.js?v=9f5c62a4:11248
+commitUpdateQueue @ chunk-PJEEZAML.js?v=9f5c62a4:11265
+commitLayoutEffectOnFiber @ chunk-PJEEZAML.js?v=9f5c62a4:17093
+commitLayoutMountEffects_complete @ chunk-PJEEZAML.js?v=9f5c62a4:17980
+commitLayoutEffects_begin @ chunk-PJEEZAML.js?v=9f5c62a4:17969
+commitLayoutEffects @ chunk-PJEEZAML.js?v=9f5c62a4:17920
+commitRootImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19353
+commitRoot @ chunk-PJEEZAML.js?v=9f5c62a4:19277
+performSyncWorkOnRoot @ chunk-PJEEZAML.js?v=9f5c62a4:18895
+flushSyncCallbacks @ chunk-PJEEZAML.js?v=9f5c62a4:9119
+flushPassiveEffectsImpl @ chunk-PJEEZAML.js?v=9f5c62a4:19506
+flushPassiveEffects @ chunk-PJEEZAML.js?v=9f5c62a4:19447
+(anônimo) @ chunk-PJEEZAML.js?v=9f5c62a4:19328
+workLoop @ chunk-PJEEZAML.js?v=9f5c62a4:197
+flushWork @ chunk-PJEEZAML.js?v=9f5c62a4:176
+performWorkUntilDeadline @ chunk-PJEEZAML.js?v=9f5c62a4:384Entenda o erro
+chunk-PJEEZAML.js?v=9f5c62a4:9129 Uncaught TypeError: Cannot read properties of undefined (reading '_leaflet_events')
+    at removeOne (chunk-NB5MQSEJ.js?v=9f5c62a4:1762:26)
+    at off (chunk-NB5MQSEJ.js?v=9f5c62a4:1708:15)
+    at NewClass._removeIcon (chunk-NB5MQSEJ.js?v=9f5c62a4:5138:13)
+    at NewClass.onRemove (chunk-NB5MQSEJ.js?v=9f5c62a4:5023:16)
+    at NewClass.removeLayer (chunk-NB5MQSEJ.js?v=9f5c62a4:4486:19)
+    at NewClass.removeFrom (chunk-NB5MQSEJ.js?v=9f5c62a4:4418:17)
+    at NewClass.remove (chunk-NB5MQSEJ.js?v=9f5c62a4:4408:23)
+    at NewClass.remove (chunk-NB5MQSEJ.js?v=9f5c62a4:2498:29)
+    at react-leaflet.js?v=9f5c62a4:571:46
+    at safelyCallDestroy (chunk-PJEEZAML.js?v=9f5c62a4:16748:13)

@@ -126,20 +126,69 @@ const api = {
     try {
       const payload = {
         perfil: profile,
-        chuva: false
+        chuva: false,
       };
-      
-      if (path) {
+
+      if (Array.isArray(path) && path.length > 0) {
         payload.path = path;
-      } else {
+      } else if (from && to) {
         payload.from = from;
         payload.to = to;
+      } else {
+        throw new Error('Parâmetros insuficientes para /route/details');
       }
-      
+
       const res = await axios.post(`${API_BASE}/route/details`, payload);
       return res.data;
     } catch (error) {
       console.error('Erro ao obter detalhes da rota:', error);
+
+      // Se backend mandou detail, reempacotar em uma mensagem amigável
+      if (error.response && error.response.data && error.response.data.detail) {
+        const detail = error.response.data.detail;
+        const msg =
+          typeof detail === 'string'
+            ? detail
+            : detail.message || 'Erro ao obter detalhes da rota';
+        throw new Error(msg);
+      }
+
+      throw error;
+    }
+  },
+
+  /**
+   * Reporta uma barreira encontrada pelo usuário.
+   * O formato deve seguir o contrato do backend /barriers/report.
+   * @param {Object} report - Dados do relato de barreira
+   * @param {number} report.route_id - ID da rota (opcional)
+   * @param {string} report.from_node - ID do nó de origem (opcional)
+   * @param {string} report.to_node - ID do nó de destino (opcional)
+   * @param {number} report.step_index - Índice do passo na rota (opcional)
+   * @param {string} report.node_id - ID do nó onde a barreira foi encontrada (opcional)
+   * @param {string} report.profile - Perfil do usuário ('padrao', 'idoso' ou 'pcd')
+   * @param {string} report.type - Tipo de barreira ('escada', 'calcada_ruim', 'alagamento', 'obstaculo', 'iluminacao_ruim', 'seguranca', 'sinalizacao_ruim', 'outro')
+   * @param {number} report.severity - Severidade (1-5)
+   * @param {string} report.description - Descrição da barreira (opcional)
+   * @param {number} report.lat - Latitude (opcional)
+   * @param {number} report.lon - Longitude (opcional)
+   * @param {string} report.app_version - Versão do app (opcional)
+   * @param {string} report.platform - Plataforma ('web', 'android', 'ios') (opcional)
+   */
+  async reportBarrier(report) {
+    try {
+      const res = await axios.post(`${API_BASE}/barriers/report`, report);
+      return res.data;
+    } catch (error) {
+      console.error('Erro ao reportar barreira:', error);
+      if (error.response && error.response.data && error.response.data.detail) {
+        const detail = error.response.data.detail;
+        const msg =
+          typeof detail === 'string'
+            ? detail
+            : detail.message || 'Erro ao reportar barreira';
+        throw new Error(msg);
+      }
       throw error;
     }
   },
@@ -241,6 +290,20 @@ const api = {
     } catch (error) {
       console.error('Erro ao buscar paradas por linha:', error);
       throw error;
+    }
+  },
+
+  /**
+   * Busca notificações do sistema
+   * @returns {Promise<Object>} Lista de notificações
+   */
+  async getNotifications() {
+    try {
+      const res = await axios.get(`${API_BASE}/notifications`);
+      return res.data;
+    } catch (error) {
+      console.error('Erro ao buscar notificações:', error);
+      return { notifications: [], unread_count: 0 };
     }
   }
 };
