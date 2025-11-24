@@ -301,3 +301,174 @@ async def get_graph_visualization() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Erro na geração de visualização: {e}")
         raise HTTPException(status_code=500, detail=f"Erro na visualização: {str(e)}")
+
+@graph_analysis_router.get("/coloring")
+async def get_edge_coloring_analysis() -> Dict[str, Any]:
+    """
+    Análise de coloração de arestas por modo de transporte.
+    
+    Esta análise aplica conceitos de teoria dos grafos para:
+    - Identificar partições por modo de transporte (coloração)
+    - Calcular número cromático de arestas
+    - Analisar conflitos (arestas adjacentes com mesmo modo)
+    - Identificar subgrafos por modo
+    """
+    try:
+        nodes, edges = load_graph_data()
+        G = create_networkx_graph(nodes, edges)
+        
+        # Estatísticas por modo de transporte (cores/partições)
+        mode_stats = {}
+        edges_by_mode = {}
+        
+        # Análise de cada aresta
+        for u, v, data in G.edges(data=True):
+            mode = data.get('modo', 'unknown')
+            
+            # Estatísticas por modo
+            if mode not in mode_stats:
+                mode_stats[mode] = {
+                    'count': 0,
+                    'total_time': 0.0,
+                    'with_transfer': 0,
+                    'with_barriers': 0
+                }
+                edges_by_mode[mode] = []
+            
+            mode_stats[mode]['count'] += 1
+            mode_stats[mode]['total_time'] += data.get('tempo_min', 0)
+            if data.get('transferencia', 0) == 1:
+                mode_stats[mode]['with_transfer'] += 1
+            if (data.get('escada', 0) == 1 or 
+                data.get('calcada_ruim', 0) == 1 or 
+                data.get('risco_alag', 0) == 1):
+                mode_stats[mode]['with_barriers'] += 1
+            
+            edges_by_mode[mode].append({
+                'from': u,
+                'to': v,
+                'tempo_min': data.get('tempo_min', 0)
+            })
+        
+        # Número de cores (modos distintos) = número cromático de arestas
+        num_colors = len(mode_stats)
+        
+        # Análise de conflitos: arestas adjacentes com mesmo modo
+        conflicts = []
+        conflict_count = 0
+        
+        for node in G.nodes():
+            incident_edges = list(G.edges(node, data=True))
+            modes_at_node = {}
+            
+            for u, v, data in incident_edges:
+                mode = data.get('modo', 'unknown')
+                if mode not in modes_at_node:
+                    modes_at_node[mode] = []
+                modes_at_node[mode].append((u, v))
+            
+            # Se um nó tem múltiplas arestas do mesmo modo, há conflito potencial
+            for mode, edge_list in modes_at_node.items():
+                if len(edge_list) > 1:
+                    conflict_count += len(edge_list) - 1
+                    conflicts.append({
+                        'node': node,
+                        'mode': mode,
+                        'edges': edge_list,
+                        'count': len(edge_list)
+                    })
+        
+        # Criar subgrafos por modo (partições)
+        subgraphs_by_mode = {}
+        for mode in mode_stats.keys():
+            # Criar subgrafo apenas com arestas deste modo
+            edges_of_mode = [(u, v) for u, v, d in G.edges(data=True) 
+                            if d.get('modo') == mode]
+            if edges_of_mode:
+                subgraph = G.edge_subgraph(edges_of_mode)
+                subgraphs_by_mode[mode] = {
+                    'nodes': subgraph.number_of_nodes(),
+                    'edges': subgraph.number_of_edges(),
+                    'components': nx.number_connected_components(subgraph),
+                    'density': round(nx.density(subgraph), 4) if subgraph.number_of_nodes() > 0 else 0,
+                    'is_connected': nx.is_connected(subgraph) if subgraph.number_of_nodes() > 0 else False
+                }
+        
+        # Calcular número cromático de arestas usando algoritmo guloso
+        # Para grafos simples, o número cromático de arestas é no máximo Δ(G) ou Δ(G)+1
+        max_degree = max(dict(G.degree()).values()) if G.number_of_nodes() > 0 else 0
+        
+        # Verificar se é possível colorir com num_colors cores (modos)
+        # Se num_colors <= max_degree, a coloração é válida
+        chromatic_number_valid = num_colors <= max_degree + 1
+        
+        # Análise de bipartição: verificar se o grafo pode ser bipartido por modo
+        # Um grafo é bipartido se não contém ciclos ímpares
+        bipartite_analysis = {}
+        for mode, subgraph_info in subgraphs_by_mode.items():
+            if subgraph_info['nodes'] > 0:
+                edges_of_mode = [(u, v) for u, v, d in G.edges(data=True) 
+                               if d.get('modo') == mode]
+                if edges_of_mode:
+                    sg = G.edge_subgraph(edges_of_mode)
+                    try:
+                        is_bipartite = nx.is_bipartite(sg)
+                        bipartite_analysis[mode] = is_bipartite
+                    except:
+                        bipartite_analysis[mode] = None
+        
+        # Resumo estatístico
+        total_edges = G.number_of_edges()
+        mode_distribution = {mode: {
+            'count': stats['count'],
+            'percentage': round(100 * stats['count'] / total_edges, 2) if total_edges > 0 else 0,
+            'avg_time': round(stats['total_time'] / stats['count'], 2) if stats['count'] > 0 else 0
+        } for mode, stats in mode_stats.items()}
+        
+        return {
+            "coloring": {
+                "num_colors": num_colors,
+                "colors_used": list(mode_stats.keys()),
+                "chromatic_number_estimate": max_degree + 1,
+                "chromatic_number_actual": num_colors,
+                "is_valid_coloring": chromatic_number_valid,
+                "max_degree": max_degree
+            },
+            "partitions": {
+                "num_partitions": num_colors,
+                "modes": list(mode_stats.keys()),
+                "distribution": mode_distribution
+            },
+            "conflicts": {
+                "total_conflicts": conflict_count,
+                "conflicting_nodes": len(conflicts),
+                "details": conflicts[:20]  # Limitar a 20 para não sobrecarregar
+            },
+            "subgraphs_by_mode": subgraphs_by_mode,
+            "bipartite_analysis": bipartite_analysis,
+            "statistics": {
+                mode: {
+                    'edges': stats['count'],
+                    'total_time_min': round(stats['total_time'], 2),
+                    'avg_time_min': round(stats['total_time'] / stats['count'], 2) if stats['count'] > 0 else 0,
+                    'with_transfer': stats['with_transfer'],
+                    'with_barriers': stats['with_barriers'],
+                    'percentage': round(100 * stats['count'] / total_edges, 2) if total_edges > 0 else 0
+                }
+                for mode, stats in mode_stats.items()
+            },
+            "interpretation": {
+                "description": f"O grafo possui {num_colors} modos de transporte distintos, "
+                              f"formando {num_colors} partições de arestas. "
+                              f"O número cromático de arestas é {num_colors}, "
+                              f"o que significa que são necessárias {num_colors} cores diferentes "
+                              f"para colorir todas as arestas sem conflitos (arestas adjacentes com mesma cor).",
+                "conflicts_note": f"Encontrados {conflict_count} conflitos potenciais onde múltiplas arestas "
+                                 f"do mesmo modo incidem no mesmo vértice (pontos de transferência)."
+            },
+            "timestamp": pd.Timestamp.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro na análise de coloração: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro na análise: {str(e)}")
